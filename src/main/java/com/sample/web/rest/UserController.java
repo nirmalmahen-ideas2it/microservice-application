@@ -2,7 +2,6 @@ package com.sample.web.rest;
 
 import com.sample.domain.PagedResponse;
 import com.sample.service.UserService;
-import com.sample.service.dto.RoleInfo;
 import com.sample.service.dto.UserCreateDto;
 import com.sample.service.dto.UserInfo;
 import com.sample.service.dto.UserUpdateDto;
@@ -12,8 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +19,7 @@ import java.util.List;
 /**
  * REST controller for managing {@link com.sample.domain.User}.
  * Provides CRUD + PATCH + pagination endpoints.
- *
+ * <p>
  * OpenAPI documentation is provided using Swagger annotations.
  */
 @RestController

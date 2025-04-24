@@ -13,11 +13,17 @@ import com.sample.service.dto.UserUpdateDto;
 import com.sample.service.mapper.UserMapper;
 import com.sample.util.PasswordUtil;
 import jakarta.transaction.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -42,14 +48,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CachePut(value = "users", key = "#result.id")
     public UserInfo create(UserCreateDto dto) {
         User user = userMapper.toEntity(dto);
         user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
         user.setRoles(resolveRoles(dto.getRoles()));
-        return userMapper.toInfo(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+        return userMapper.toInfo(savedUser);
     }
 
     @Override
+    @CachePut(value = "users", key = "#result.id")
     public UserInfo update(UserUpdateDto dto) {
         User user = userRepository.findById(dto.getId()).orElseThrow();
         user.setUsername(dto.getUsername());
@@ -60,10 +69,12 @@ public class UserServiceImpl implements UserService {
         user.setAddress(dto.getAddress());
         user.setPostalCode(dto.getPostalCode());
         user.setRoles(resolveRoles(dto.getRoles()));
-        return userMapper.toInfo(userRepository.save(user));
+        User updatedUser = userRepository.save(user);
+        return userMapper.toInfo(updatedUser);
     }
 
     @Override
+    @CachePut(value = "users", key = "#result.id")
     public UserInfo partialUpdate(UserUpdateDto dto) {
         User user = userRepository.findById(dto.getId()).orElseThrow();
         if (dto.getFirstName() != null) user.setFirstName(dto.getFirstName());
@@ -78,12 +89,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public Optional<UserInfo> getById(Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.map(userMapper::toInfo);
     }
 
     @Override
+    @Cacheable(value = "users")
     public List<UserInfo> getAll() {
         List<User> users = userRepository.findAll();
         List<UserInfo> resultUserList = users.stream()
@@ -110,14 +123,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#id")
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
 
     private Set<Role> resolveRoles(Set<RoleType> roleNames) {
         if (roleNames == null || roleNames.isEmpty()) return new HashSet<>();
-
-        // Convert role names to RoleType enum and fetch corresponding Role entities
         return roleNames.stream()
             .map(roleName -> {
                 RoleType roleType = RoleType.valueOf(roleName.name().toUpperCase()); // Convert to enum

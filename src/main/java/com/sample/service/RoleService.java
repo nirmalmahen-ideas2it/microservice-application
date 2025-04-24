@@ -1,10 +1,10 @@
 package com.sample.service;
 
 import com.sample.domain.PagedResponse;
-import com.sample.service.dto.*;
+import com.sample.service.dto.RoleCreateDto;
+import com.sample.service.dto.RoleInfo;
+import com.sample.service.dto.RoleUpdateDto;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public interface RoleService {
 
     List<RoleInfo> getAll();
 
-    PagedResponse <RoleInfo> getAllPaged(int offset, int limit);
+    PagedResponse<RoleInfo> getAllPaged(int offset, int limit);
 
     void delete(Long id);
 }
