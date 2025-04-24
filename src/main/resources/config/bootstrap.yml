@@ -12,11 +12,16 @@ spring:
     # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
     active: '@spring.profiles.active@'
   cloud:
+    vault:
+      uri: http://localhost:8100
+      authentication: token
+      // Add Token for Auth
+      kv:
+        enabled: true
+        backend: secret
+        default-context: sample
+        profile-separator: /
     consul:
-      config:
-        fail-fast: false # if not in "prod" profile, do not force to use Spring Cloud Config
-        format: yaml
-        profile-separator: '-'
       discovery:
         tags:
           - profile=${spring.profiles.active}
@@ -28,8 +33,3 @@ spring:
 
       host: localhost
       port: 8500
-  docker:
-    compose:
-      enabled: true
-      lifecycle-management: start-only
-      file: src/main/docker/postgresql.yml

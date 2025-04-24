@@ -23,8 +23,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/postgres
-    username: myFirstMicroService
-    password: mySecurePassword
+    username: ${database.username}
+    password: ${database.password}
     hikari:
       poolName: Hikari
       auto-commit: false

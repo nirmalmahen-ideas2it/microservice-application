@@ -167,6 +167,11 @@
       <version>3.0.2</version>
     </dependency>
 
+    <!-- Hashicorp- Vault -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-vault-config</artifactId>
+    </dependency>
 
   </dependencies>
 
