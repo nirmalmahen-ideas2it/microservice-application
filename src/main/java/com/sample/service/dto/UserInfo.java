@@ -1,5 +1,7 @@
 package com.sample.service.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,7 +9,8 @@ import java.time.Instant;
 import java.util.Set;
 
 @Getter
-@Builder
+@Builder(toBuilder = true)
+@JsonDeserialize(builder = UserInfo.UserInfoBuilder.class)
 public class UserInfo {
 
     private final Long id;
@@ -23,4 +26,8 @@ public class UserInfo {
     private final String createdBy;
     private final Instant lastModifiedDate;
     private final String lastModifiedBy;
+
+    @JsonPOJOBuilder(withPrefix = "") // Tell Jackson builder methods have no prefix (e.g., "id()" not "withId()")
+    public static class UserInfoBuilder {
+    }
 }

@@ -1,0 +1,42 @@
+package com.sample.service.impl;
+
+import com.sample.service.caching.UserCacheService;
+import com.sample.service.dto.UserInfo;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.util.List;
+
+@Service
+public class UserCacheServiceImpl implements UserCacheService {
+
+    private static final String USER_KEY_PREFIX = "user:";
+    private static final String USER_LIST_KEY = "user:all";
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    public UserCacheServiceImpl(RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    @Override
+    public void saveUser(UserInfo user) {
+        redisTemplate.opsForValue().set(USER_KEY_PREFIX + user.getId(), user, Duration.ofMinutes(1));
+    }
+
+    @Override
+    public UserInfo getUser(Long id) {
+        return (UserInfo) redisTemplate.opsForValue().get(USER_KEY_PREFIX + id);
+    }
+
+    @Override
+    public List<UserInfo> getAllUsers() {
+        return (List<UserInfo>) redisTemplate.opsForValue().get(USER_LIST_KEY);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        redisTemplate.delete(USER_KEY_PREFIX + id);
+    }
+}

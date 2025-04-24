@@ -2,6 +2,7 @@ package com.sample.web.rest;
 
 import com.sample.domain.PagedResponse;
 import com.sample.service.UserService;
+import com.sample.service.caching.UserCacheService;
 import com.sample.service.dto.UserCreateDto;
 import com.sample.service.dto.UserInfo;
 import com.sample.service.dto.UserUpdateDto;
@@ -27,9 +28,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService service;
+    private final UserCacheService userCacheService;
 
-    public UserController(UserService service) {
+    public UserController(UserService service, UserCacheService userCacheService) {
         this.service = service;
+        this.userCacheService = userCacheService;
     }
 
     @Operation(summary = "Create a new user", description = "Adds a new user entity to the system")
@@ -41,6 +44,7 @@ public class UserController {
     })
     @PostMapping
     public ResponseEntity<UserInfo> create(@Valid @RequestBody UserCreateDto dto) {
+
         return ResponseEntity.ok(service.create(dto));
     }
 

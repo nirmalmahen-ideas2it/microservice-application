@@ -31,7 +31,12 @@ spring:
     show-sql: true
 
   cache:
-    type: simple
+    type: redis
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 60000
+      password: myStrongRedisPassword
 
 management:
   endpoints:
