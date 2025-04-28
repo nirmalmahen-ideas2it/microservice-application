@@ -30,7 +30,7 @@ spring:
       uri: http://localhost:8100
       authentication: token
       token: ${VAULT_TOKEN}
-#       Add VAULT_TOKEN as Env variable for Auth
+      #       Add VAULT_TOKEN as Env variable for Auth
       kv:
         enabled: true
         backend: secret

@@ -46,9 +46,9 @@ public class RedisCacheConfig {
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.activateDefaultTyping(
-            mapper.getPolymorphicTypeValidator(), // Use default validator
-            ObjectMapper.DefaultTyping.NON_FINAL, // Include type info for non-final types
-            JsonTypeInfo.As.PROPERTY // Store type info as a property (e.g., "@class")
+                mapper.getPolymorphicTypeValidator(), // Use default validator
+                ObjectMapper.DefaultTyping.NON_FINAL, // Include type info for non-final types
+                JsonTypeInfo.As.PROPERTY // Store type info as a property (e.g., "@class")
         );
         jsonSerializer.setObjectMapper(mapper);
         template.setValueSerializer(jsonSerializer);

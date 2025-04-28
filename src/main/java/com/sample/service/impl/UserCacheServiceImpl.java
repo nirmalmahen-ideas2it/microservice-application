@@ -1,7 +1,7 @@
 package com.sample.service.impl;
 
+import com.sample.dto.UserInfo;
 import com.sample.service.caching.UserCacheService;
-import com.sample.service.dto.UserInfo;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 

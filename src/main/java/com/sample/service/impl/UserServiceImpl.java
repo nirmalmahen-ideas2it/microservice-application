@@ -11,9 +11,6 @@ import com.sample.repository.RoleRepository;
 import com.sample.repository.UserRepository;
 import com.sample.service.UserService;
 import com.sample.service.caching.UserCacheService;
-import com.sample.service.dto.UserCreateDto;
-import com.sample.service.dto.UserInfo;
-import com.sample.service.dto.UserUpdateDto;
 import com.sample.service.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -44,8 +41,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserCacheService userCacheService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, UserCacheService userCacheService) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, UserCacheService userCacheService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;

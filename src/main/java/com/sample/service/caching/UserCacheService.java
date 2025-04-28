@@ -1,6 +1,6 @@
 package com.sample.service.caching;
 
-import com.sample.service.dto.UserInfo;
+import com.sample.dto.UserInfo;
 
 public interface UserCacheService {
     void saveUser(UserInfo user);
