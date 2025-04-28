@@ -21,6 +21,5 @@ spring:
           - git-commit=${git.commit.id.abbrev:}
           - git-branch=${git.branch:}
           - context-path=${server.servlet.context-path:}
-
       host: localhost
       port: 8500

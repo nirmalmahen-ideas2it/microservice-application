@@ -1,9 +1,9 @@
 package com.sample.service.mapper;
 
 import com.sample.domain.Role;
-import com.sample.service.dto.RoleCreateDto;
-import com.sample.service.dto.RoleUpdateDto;
-import com.sample.service.dto.RoleInfo;
+import com.sample.dto.RoleCreateDto;
+import com.sample.dto.RoleUpdateDto;
+import com.sample.dto.RoleInfo;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")

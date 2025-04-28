@@ -4,9 +4,9 @@ import com.sample.domain.PagedResponse;
 import com.sample.domain.Role;
 import com.sample.repository.RoleRepository;
 import com.sample.service.RoleService;
-import com.sample.service.dto.RoleCreateDto;
-import com.sample.service.dto.RoleInfo;
-import com.sample.service.dto.RoleUpdateDto;
+import com.sample.dto.RoleCreateDto;
+import com.sample.dto.RoleInfo;
+import com.sample.dto.RoleUpdateDto;
 import com.sample.service.mapper.RoleMapper;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Service implementation for managing roles.

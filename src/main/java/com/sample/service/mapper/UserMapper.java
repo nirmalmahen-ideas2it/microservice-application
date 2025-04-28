@@ -3,9 +3,9 @@ package com.sample.service.mapper;
 import com.sample.domain.Role;
 import com.sample.domain.User;
 import com.sample.enums.RoleType;
-import com.sample.service.dto.UserCreateDto;
-import com.sample.service.dto.UserInfo;
-import com.sample.service.dto.UserUpdateDto;
+import com.sample.dto.UserCreateDto;
+import com.sample.dto.UserInfo;
+import com.sample.dto.UserUpdateDto;
 import org.mapstruct.*;
 
 import java.util.HashSet;

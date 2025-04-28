@@ -1,9 +1,8 @@
-package com.sample.service.dto;
+package com.sample.dto;
 
 import com.sample.enums.RoleType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,10 +15,12 @@ import lombok.Getter;
  */
 @Getter
 @Builder
-public class RoleCreateDto {
+public class RoleUpdateDto {
 
     @NotNull
-    @Schema(description = "Role type", example = "ADMIN", allowableValues = {"ADMIN", "USER", "MAINTAINER"})
+    private final Long id;
+
+    @Schema(description = "Role type", example = "USER", allowableValues = {"ADMIN", "USER", "MAINTAINER"})
     private final RoleType name; // Use RoleType enum
 
 }
