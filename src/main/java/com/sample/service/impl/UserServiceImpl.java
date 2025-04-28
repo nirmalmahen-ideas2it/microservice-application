@@ -10,6 +10,7 @@ import com.sample.enums.RoleType;
 import com.sample.repository.RoleRepository;
 import com.sample.repository.UserRepository;
 import com.sample.service.UserService;
+import com.sample.service.caching.UserCacheService;
 import com.sample.service.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -38,12 +39,14 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final UserCacheService userCacheService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, UserCacheService userCacheService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.userCacheService = userCacheService;
     }
 
     @Override
@@ -51,7 +54,10 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(resolveRoles(dto.getRoles()));
-        return userMapper.toInfo(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+        UserInfo userInfo = userMapper.toInfo(savedUser);
+        userCacheService.saveUser(userInfo);
+        return userInfo;
     }
 
     @Override
@@ -65,7 +71,10 @@ public class UserServiceImpl implements UserService {
         user.setAddress(dto.getAddress());
         user.setPostalCode(dto.getPostalCode());
         user.setRoles(resolveRoles(dto.getRoles()));
-        return userMapper.toInfo(userRepository.save(user));
+        User updatedUser = userRepository.save(user);
+        UserInfo userInfo = userMapper.toInfo(updatedUser);
+        userCacheService.saveUser(userInfo);
+        return userInfo;
     }
 
     @Override
@@ -79,12 +88,19 @@ public class UserServiceImpl implements UserService {
         if (dto.getPostalCode() != null) user.setPostalCode(dto.getPostalCode());
         if (dto.getPassword() != null) user.setPassword(passwordEncoder.encode(dto.getPassword()));
         if (dto.getRoles() != null) user.setRoles(resolveRoles(dto.getRoles()));
-        return userMapper.toInfo(userRepository.save(user));
+        User updatedUser = userRepository.save(user);
+        UserInfo userInfo = userMapper.toInfo(updatedUser);
+        userCacheService.saveUser(userInfo);
+        return userInfo;
     }
 
     @Override
     public Optional<UserInfo> getById(Long id) {
+        UserInfo cached = userCacheService.getUser(id);
+        if (cached != null) return Optional.of(cached);
+
         Optional<User> user = userRepository.findById(id);
+        user.ifPresent(u -> userCacheService.saveUser(userMapper.toInfo(u)));
         return user.map(userMapper::toInfo);
     }
 
@@ -117,12 +133,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
+        userCacheService.deleteUser(id);
     }
 
     private Set<Role> resolveRoles(Set<RoleType> roleNames) {
         if (roleNames == null || roleNames.isEmpty()) return new HashSet<>();
-
-        // Convert role names to RoleType enum and fetch corresponding Role entities
         return roleNames.stream()
             .map(roleName -> {
                 RoleType roleType = RoleType.valueOf(roleName.name().toUpperCase()); // Convert to enum
