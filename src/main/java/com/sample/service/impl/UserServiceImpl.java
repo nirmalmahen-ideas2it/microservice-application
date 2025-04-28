@@ -3,21 +3,24 @@ package com.sample.service.impl;
 import com.sample.domain.PagedResponse;
 import com.sample.domain.Role;
 import com.sample.domain.User;
+import com.sample.dto.UserCreateDto;
+import com.sample.dto.UserInfo;
+import com.sample.dto.UserUpdateDto;
 import com.sample.enums.RoleType;
 import com.sample.repository.RoleRepository;
 import com.sample.repository.UserRepository;
 import com.sample.service.UserService;
-import com.sample.service.dto.UserCreateDto;
-import com.sample.service.dto.UserInfo;
-import com.sample.service.dto.UserUpdateDto;
 import com.sample.service.mapper.UserMapper;
-import com.sample.util.PasswordUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -34,17 +37,19 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserInfo create(UserCreateDto dto) {
         User user = userMapper.toEntity(dto);
-        user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(resolveRoles(dto.getRoles()));
         return userMapper.toInfo(userRepository.save(user));
     }
@@ -72,7 +77,7 @@ public class UserServiceImpl implements UserService {
         if (dto.getMobile() != null) user.setMobile(dto.getMobile());
         if (dto.getAddress() != null) user.setAddress(dto.getAddress());
         if (dto.getPostalCode() != null) user.setPostalCode(dto.getPostalCode());
-        if (dto.getPassword() != null) user.setPassword(PasswordUtil.hashPassword(dto.getPassword()));
+        if (dto.getPassword() != null) user.setPassword(passwordEncoder.encode(dto.getPassword()));
         if (dto.getRoles() != null) user.setRoles(resolveRoles(dto.getRoles()));
         return userMapper.toInfo(userRepository.save(user));
     }

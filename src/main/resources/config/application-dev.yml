@@ -5,10 +5,6 @@ spring:
 
   cloud:
     consul:
-      config:
-        fail-fast: false # if not in "prod" profile, do not force to use Spring Cloud Config
-        format: yaml
-        profile-separator: '-'
       discovery:
         prefer-ip-address: true
         tags:
@@ -23,8 +19,6 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/postgres
-    username: ${database.username}
-    password: ${database.password}
     hikari:
       poolName: Hikari
       auto-commit: false
