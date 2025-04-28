@@ -180,6 +180,13 @@
       <version>${jjwt.version}</version>
       <scope>runtime</scope>
     </dependency>
+
+    <!-- Hashicorp- Vault -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-vault-config</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>

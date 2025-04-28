@@ -26,6 +26,16 @@ spring:
         initial-interval: 1000
         multiplier: 1.5
         max-interval: 5000
+    vault:
+      uri: http://localhost:8100
+      authentication: token
+      token: ${VAULT_TOKEN}
+#       Add VAULT_TOKEN as Env variable for Auth
+      kv:
+        enabled: true
+        backend: secret
+        default-context: sample
+        profile-separator: /
     consul:
       discovery:
         tags:
