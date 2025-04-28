@@ -1,5 +1,6 @@
-package com.sample.service.dto;
+package com.sample.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,4 +24,7 @@ public class UserInfo {
     private final String createdBy;
     private final Instant lastModifiedDate;
     private final String lastModifiedBy;
+
+    @JsonIgnore
+    private final String password;
 }

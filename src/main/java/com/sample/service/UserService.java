@@ -1,11 +1,9 @@
 package com.sample.service;
 
 import com.sample.domain.PagedResponse;
-import com.sample.service.dto.UserCreateDto;
-import com.sample.service.dto.UserInfo;
-import com.sample.service.dto.UserUpdateDto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.sample.dto.UserCreateDto;
+import com.sample.dto.UserInfo;
+import com.sample.dto.UserUpdateDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,4 +30,5 @@ public interface UserService {
     PagedResponse<UserInfo> getAllPaged(int offset, int limit);
 
     void delete(Long id);
+
 }
