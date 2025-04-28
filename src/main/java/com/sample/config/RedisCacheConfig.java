@@ -12,7 +12,7 @@ import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -41,17 +41,17 @@ public class RedisCacheConfig {
         template.setKeySerializer(new StringRedisSerializer());
 
         // Register Java Time Module
+        Jackson2JsonRedisSerializer<Object> jsonSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
         mapper.activateDefaultTyping(
             mapper.getPolymorphicTypeValidator(), // Use default validator
             ObjectMapper.DefaultTyping.NON_FINAL, // Include type info for non-final types
             JsonTypeInfo.As.PROPERTY // Store type info as a property (e.g., "@class")
         );
-
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(mapper));
+        jsonSerializer.setObjectMapper(mapper);
+        template.setValueSerializer(jsonSerializer);
         return template;
     }
 }
