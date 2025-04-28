@@ -1,4 +1,4 @@
-package com.sample.service.dto;
+package com.sample.dto;
 
 import com.sample.enums.RoleType;
 import io.swagger.v3.oas.annotations.media.Schema;

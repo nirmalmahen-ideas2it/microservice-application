@@ -39,6 +39,9 @@ spring:
         watch:
           enabled: false
 
+jwt:
+  secret: ${jwt.secret}
+
 server:
   port: 9090
 

@@ -1,10 +1,10 @@
 package com.sample.web.rest;
 
 import com.sample.domain.PagedResponse;
+import com.sample.dto.RoleCreateDto;
+import com.sample.dto.RoleInfo;
+import com.sample.dto.RoleUpdateDto;
 import com.sample.service.RoleService;
-import com.sample.service.dto.RoleCreateDto;
-import com.sample.service.dto.RoleInfo;
-import com.sample.service.dto.RoleUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

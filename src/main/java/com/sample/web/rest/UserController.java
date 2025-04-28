@@ -1,6 +1,9 @@
 package com.sample.web.rest;
 
 import com.sample.domain.PagedResponse;
+import com.sample.dto.UserCreateDto;
+import com.sample.dto.UserInfo;
+import com.sample.dto.UserUpdateDto;
 import com.sample.service.UserService;
 import com.sample.service.caching.UserCacheService;
 import com.sample.service.dto.UserCreateDto;

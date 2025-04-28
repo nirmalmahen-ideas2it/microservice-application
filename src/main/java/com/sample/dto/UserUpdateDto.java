@@ -1,4 +1,4 @@
-package com.sample.service.dto;
+package com.sample.dto;
 
 import com.sample.enums.RoleType;
 import lombok.Builder;
@@ -8,8 +8,9 @@ import java.util.Set;
 
 @Getter
 @Builder
-public class UserCreateDto {
+public class UserUpdateDto {
 
+    private final Long id;
     private final String username;
     private final String password;
     private final String firstName;
