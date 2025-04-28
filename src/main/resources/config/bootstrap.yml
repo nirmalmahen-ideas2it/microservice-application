@@ -6,12 +6,26 @@
 spring:
   application:
     name: sample
+  config:
+    import: optional:configserver:http://localhost:8888
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by maven when building the JAR file
     # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
     active: '@spring.profiles.active@'
   cloud:
+    config:
+      fail-fast: true
+      uri: http://localhost:8888
+      label: main
+      profile: dev
+      name: sample
+      format: yaml
+      retry:
+        max-attempts: 6
+        initial-interval: 1000
+        multiplier: 1.5
+        max-interval: 5000
     consul:
       discovery:
         tags:
