@@ -15,7 +15,8 @@ spring:
     vault:
       uri: http://localhost:8100
       authentication: token
-      // Add Token for Auth
+      token: ${VAULT_TOKEN}
+#       Add VAULT_TOKEN as Env variable for Auth
       kv:
         enabled: true
         backend: secret
