@@ -1,7 +1,9 @@
 package com.sample.service;
 
 import com.sample.domain.PagedResponse;
-import com.sample.dto.*;
+import com.sample.dto.RoleCreateDto;
+import com.sample.dto.RoleInfo;
+import com.sample.dto.RoleUpdateDto;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public interface RoleService {
 
     List<RoleInfo> getAll();
 
-    PagedResponse <RoleInfo> getAllPaged(int offset, int limit);
+    PagedResponse<RoleInfo> getAllPaged(int offset, int limit);
 
     void delete(Long id);
 }

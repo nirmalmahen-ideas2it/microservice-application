@@ -2,9 +2,12 @@ package com.sample.service.mapper;
 
 import com.sample.domain.Role;
 import com.sample.dto.RoleCreateDto;
-import com.sample.dto.RoleUpdateDto;
 import com.sample.dto.RoleInfo;
-import org.mapstruct.*;
+import com.sample.dto.RoleUpdateDto;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface RoleMapper {

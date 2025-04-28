@@ -1,10 +1,10 @@
 package com.sample.web.rest;
 
 import com.sample.domain.PagedResponse;
-import com.sample.service.UserService;
 import com.sample.dto.UserCreateDto;
 import com.sample.dto.UserInfo;
 import com.sample.dto.UserUpdateDto;
+import com.sample.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * REST controller for managing {@link com.sample.domain.User}.
  * Provides CRUD + PATCH + pagination endpoints.
- *
+ * <p>
  * OpenAPI documentation is provided using Swagger annotations.
  */
 @RestController

@@ -4,7 +4,6 @@ import com.sample.domain.PagedResponse;
 import com.sample.dto.UserCreateDto;
 import com.sample.dto.UserInfo;
 import com.sample.dto.UserUpdateDto;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Optional;

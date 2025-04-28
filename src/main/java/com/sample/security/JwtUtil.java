@@ -1,7 +1,10 @@
 package com.sample.security;
 
 import com.sample.dto.AuthResponse;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +21,11 @@ public class JwtUtil {
 
     public AuthResponse generateToken(String username) {
         return new AuthResponse(Jwts.builder()
-            .setSubject(username)
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MS))
-            .signWith(key, SignatureAlgorithm.HS256)
-            .compact()) ;
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MS))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact());
     }
 
     public String extractUsername(String token) {
@@ -40,9 +43,9 @@ public class JwtUtil {
 
     private Claims parseClaims(String token) {
         return Jwts.parserBuilder()
-            .setSigningKey(key)
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
