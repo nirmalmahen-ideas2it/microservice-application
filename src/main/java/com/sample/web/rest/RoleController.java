@@ -1,17 +1,16 @@
 package com.sample.web.rest;
 
 import com.sample.domain.PagedResponse;
-import com.sample.domain.Role;
+import com.sample.dto.RoleCreateDto;
+import com.sample.dto.RoleInfo;
+import com.sample.dto.RoleUpdateDto;
 import com.sample.service.RoleService;
-import com.sample.service.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

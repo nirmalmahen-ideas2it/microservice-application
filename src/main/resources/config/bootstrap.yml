@@ -27,10 +27,6 @@ spring:
         multiplier: 1.5
         max-interval: 5000
     consul:
-      config:
-        fail-fast: false # if not in "prod" profile, do not force to use Spring Cloud Config
-        format: yaml
-        profile-separator: '-'
       discovery:
         tags:
           - profile=${spring.profiles.active}
@@ -39,6 +35,5 @@ spring:
           - git-commit=${git.commit.id.abbrev:}
           - git-branch=${git.branch:}
           - context-path=${server.servlet.context-path:}
-
       host: localhost
       port: 8500

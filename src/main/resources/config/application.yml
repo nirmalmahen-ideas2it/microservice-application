@@ -3,13 +3,13 @@ spring:
     name: sample
 
   jpa:
-    open-in-view: false
+    open-in-view: false # Disables the "Open Session in View" pattern, which keeps the Hibernate session open during the view rendering phase. Setting it to false improves performance and avoids lazy-loading issues.
     properties:
       hibernate.jdbc.time_zone: UTC
       hibernate.timezone.default_storage: NORMALIZE
       hibernate.type.preferred_instant_jdbc_type: TIMESTAMP
       hibernate.id.new_generator_mappings: true
-      hibernate.connection.provider_disables_autocommit: true
+      hibernate.connection.provider_disables_autocommit: true # Ensures that Hibernate does not rely on auto-commit behavior for database connections.
       hibernate.cache.use_second_level_cache: false
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
