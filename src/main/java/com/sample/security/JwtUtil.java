@@ -13,20 +13,31 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final long EXPIRATION_TIME_MS = 1000 * 60 * 60;
+    // Expiration times for access and refresh tokens
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME_MS = 1000 * 60 * 15; // 15 minutes
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME_MS = 1000 * 60 * 60 * 24 * 7; // 7 days
+
     private final Key key;
 
     public JwtUtil(Key key) {
         this.key = key;
     }
 
-    public AuthResponse generateToken(String username) {
-        return new AuthResponse(Jwts.builder()
+    public String generateAccessToken(String username) {
+        return generateToken(username, ACCESS_TOKEN_EXPIRATION_TIME_MS);
+    }
+
+    public String generateRefreshToken(String username) {
+        return generateToken(username, REFRESH_TOKEN_EXPIRATION_TIME_MS);
+    }
+
+    private String generateToken(String username, long expirationTime) {
+        return Jwts.builder()
             .setSubject(username)
             .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MS))
+            .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
             .signWith(key, SignatureAlgorithm.HS256)
-            .compact());
+            .compact();
     }
 
     public String extractUsername(String token) {

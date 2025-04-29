@@ -31,10 +31,21 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
-
-            return ResponseEntity.ok(jwtUtil.generateToken(authRequest.getUsername()));
+            String accessToken = jwtUtil.generateAccessToken(authRequest.getUsername());
+            String refreshToken = jwtUtil.generateRefreshToken(authRequest.getUsername());
+            return ResponseEntity.ok(new AuthResponse(accessToken, refreshToken));
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid username/password");
         }
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AuthResponse> refreshToken(@RequestBody String refreshToken) {
+        if (!jwtUtil.validateToken(refreshToken)) {
+            throw new RuntimeException("Invalid refresh token");
+        }
+        String username = jwtUtil.extractUsername(refreshToken);
+        String newAccessToken = jwtUtil.generateAccessToken(username);
+        return ResponseEntity.ok(new AuthResponse(newAccessToken, refreshToken));
     }
 }
