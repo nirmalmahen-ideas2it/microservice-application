@@ -28,9 +28,10 @@ spring:
         max-interval: 5000
     vault:
       uri: http://localhost:8100
-      authentication: token
-      token: ${VAULT_TOKEN}
-      #       Add VAULT_TOKEN as Env variable for Auth
+      authentication: APPROLE
+      app-role:
+        role-id: ${VAULT_ROLE_ID}
+        secret-id: ${VAULT_SECRET_ID}
       kv:
         enabled: true
         backend: secret

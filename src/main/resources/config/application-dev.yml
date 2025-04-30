@@ -18,7 +18,8 @@ spring:
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/postgres
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.username}
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -34,7 +35,7 @@ spring:
       host: localhost
       port: 6379
       timeout: 60000
-      password: myStrongRedisPassword
+      password: ${redis.password}
 
 management:
   endpoints:
