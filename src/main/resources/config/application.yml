@@ -2,6 +2,13 @@ spring:
   application:
     name: sample
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${jwt.issuerUri}
+
+
   jpa:
     open-in-view: false # Disables the "Open Session in View" pattern, which keeps the Hibernate session open during the view rendering phase. Setting it to false improves performance and avoids lazy-loading issues.
     properties:
@@ -39,9 +46,6 @@ spring:
         watch:
           enabled: false
 
-jwt:
-  secret: ${jwt.secret}
-
 server:
   port: 9090
 
@@ -54,3 +58,14 @@ management:
 jhipster:
   clientApp:
     name: 'Jhipster-Microservice'
+
+springdoc:
+  swagger-ui:
+    oauth2-redirect-url: ${oauth.redirectUri}
+    oauth:
+      client-id: ${oauth.clientId}
+      client-secret: ${oauth.clientSecret}  #Here, the secret is required for confidential clients
+      authorization-url: ${oauth.authUri}
+      token-url: ${oauth.tokenUri}
+      scope: openid
+

@@ -18,7 +18,8 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 
 ## Step 2: Create AppRole Role
 
-1. Create a role with the required parameters such as `secret_id_ttl`, `token_ttl`, `token_max_ttl`, and `policies`. In this case, we're attaching the `sample-dev-policy` to the role:
+1. Create a role with the required parameters such as `secret_id_ttl`, `token_ttl`, `token_max_ttl`, and `policies`. In
+   this case, we're attaching the `sample-dev-policy` to the role:
 
     ```bash
     vault write auth/approle/role/sample-dev-role \
@@ -72,7 +73,8 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 
 ## Step 5: Create/Update Policies
 
-1. Create the policy file `sample-policy.hcl` with the required capabilities. Below is an example policy for reading and managing the secrets in `secret/sample/dev`:
+1. Create the policy file `sample-policy.hcl` with the required capabilities. Below is an example policy for reading and
+   managing the secrets in `secret/sample/dev`:
 
     ```hcl
     path "secret/sample/dev" {
@@ -192,4 +194,5 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 
 ## Conclusion
 
-You have successfully enabled AppRole-based authentication in Vault, created a policy, and assigned it to the AppRole. Now you can authenticate using the `role_id` and `secret_id`, and perform actions based on the assigned policies.
+You have successfully enabled AppRole-based authentication in Vault, created a policy, and assigned it to the AppRole.
+Now you can authenticate using the `role_id` and `secret_id`, and perform actions based on the assigned policies.
