@@ -46,4 +46,4 @@ management:
 logging:
   level:
     root: INFO
-    com.sample: DEBUG
+    com.ideas2it.training.jhipster.userrole.app: DEBUG

@@ -1,4 +1,4 @@
-name: sample
+name: user-role-application
 services:
   vault:
     image: hashicorp/vault:1.19
@@ -12,7 +12,7 @@ services:
         {
           "storage": {
             "consul": {
-              "address": "sample-consul-1:8500",
+              "address": "user-role-application-consul-1:8500",
               "path": "vault/"
             }
           },

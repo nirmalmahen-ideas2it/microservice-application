@@ -2,7 +2,7 @@
   "generator-jhipster": {
     "applicationType": "microservice",
     "authenticationType": "jwt",
-    "baseName": "sample",
+    "baseName": "User Role Module",
     "buildTool": "maven",
     "cacheProvider": "no",
     "clientFramework": "no",
@@ -20,7 +20,7 @@
     "microfrontend": null,
     "microfrontends": [],
     "nativeLanguage": "en",
-    "packageName": "com.sample",
+    "packageName": "com.ideas2it.training.jhipster.userrole.app",
     "prodDatabaseType": "postgresql",
     "reactive": false,
     "serverPort": "9090",

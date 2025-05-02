@@ -1,4 +1,4 @@
-name: sample
+name: user-role-application
 services:
   redis:
     image: redis:7-alpine

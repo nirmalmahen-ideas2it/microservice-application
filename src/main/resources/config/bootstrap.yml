@@ -5,7 +5,7 @@
 
 spring:
   application:
-    name: sample
+    name: user-role-application
   config:
     import: optional:configserver:http://localhost:8888
   profiles:
@@ -19,7 +19,7 @@ spring:
       uri: http://localhost:8888
       label: main
       profile: dev
-      name: sample
+      name: user-role-application
       format: yaml
       retry:
         max-attempts: 6
@@ -35,7 +35,7 @@ spring:
       kv:
         enabled: true
         backend: secret
-        default-context: sample
+        default-context: user-role-application
         profile-separator: /
     consul:
       discovery:

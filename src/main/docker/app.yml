@@ -1,16 +1,16 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
-name: sample
+name: user-role-application
 services:
   app:
-    image: sample
+    image: user-role-application
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs
       - MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED=true
       - SPRING_CLOUD_CONSUL_HOST=consul
       - SPRING_CLOUD_CONSUL_PORT=8500
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/sample
-      - SPRING_LIQUIBASE_URL=jdbc:postgresql://postgresql:5432/sample
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/user-role-db
+      - SPRING_LIQUIBASE_URL=jdbc:postgresql://postgresql:5432/user-role-db
     healthcheck:
       test:
         - CMD

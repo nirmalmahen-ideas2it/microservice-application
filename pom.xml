@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.ideas2it.training.jhipster</groupId>
-  <artifactId>jhipster-microservice</artifactId>
+  <artifactId>user-role-module</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Jhipster Microservice</name>
+  <name>User and Role Module</name>
 
   <parent>
     <groupId>org.springframework.boot</groupId>

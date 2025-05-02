@@ -1,6 +1,6 @@
 spring:
   application:
-    name: sample
+    name: user-role-application
 
   security:
     oauth2:
@@ -39,7 +39,7 @@ spring:
   cloud:
     consul:
       discovery:
-        service-name: sample
+        service-name: user-role-application
         health-check-path: /actuator/health
         instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
       config:
