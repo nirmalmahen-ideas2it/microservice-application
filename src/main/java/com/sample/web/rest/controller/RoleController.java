@@ -1,4 +1,4 @@
-package com.sample.web.rest;
+package com.sample.web.rest.controller;
 
 import com.sample.domain.PagedResponse;
 import com.sample.dto.RoleCreateDto;
@@ -19,6 +19,9 @@ import java.util.List;
 /**
  * REST controller for managing {@link com.sample.domain.Role}.
  * Provides CRUD endpoints for roles.
+ *
+ * @author Alagu Nirmal Mahendran
+ * @since 05-06-2025
  */
 @RestController
 @RequestMapping("/api/roles")

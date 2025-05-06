@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * Handles persistence logic and DTO conversion via MapStruct.
  *
  * @author Alagu Nirmal Mahendran
- * @created 2025-04-21
+ * @since 05-06-2025
  */
 @Service
 @Transactional
@@ -49,6 +49,14 @@ public class UserServiceImpl implements UserService {
         this.userCacheService = userCacheService;
     }
 
+    /**
+     * Creates a new user.
+     * Encodes the password, resolves roles, and saves the user to the database.
+     * Also caches the created user.
+     *
+     * @param dto the UserCreateDto containing user creation details
+     * @return the created UserInfo
+     */
     @Override
     public UserInfo create(UserCreateDto dto) {
         User user = userMapper.toEntity(dto);
@@ -60,6 +68,14 @@ public class UserServiceImpl implements UserService {
         return userInfo;
     }
 
+    /**
+     * Updates an existing user.
+     * Updates all fields and roles, then saves the user to the database.
+     * Also updates the cached user.
+     *
+     * @param dto the UserUpdateDto containing user update details
+     * @return the updated UserInfo
+     */
     @Override
     public UserInfo update(UserUpdateDto dto) {
         User user = userRepository.findById(dto.getId()).orElseThrow();
@@ -77,6 +93,14 @@ public class UserServiceImpl implements UserService {
         return userInfo;
     }
 
+    /**
+     * Partially updates an existing user.
+     * Only updates non-null fields and roles, then saves the user to the database.
+     * Also updates the cached user.
+     *
+     * @param dto the UserUpdateDto containing partial user update details
+     * @return the partially updated UserInfo
+     */
     @Override
     public UserInfo partialUpdate(UserUpdateDto dto) {
         User user = userRepository.findById(dto.getId()).orElseThrow();
@@ -94,6 +118,13 @@ public class UserServiceImpl implements UserService {
         return userInfo;
     }
 
+    /**
+     * Retrieves a user by ID.
+     * First checks the cache, then the database if not found in the cache.
+     *
+     * @param id the ID of the user to retrieve
+     * @return an Optional containing the UserInfo if found
+     */
     @Override
     public Optional<UserInfo> getById(Long id) {
         UserInfo cached = userCacheService.getUser(id);
@@ -104,6 +135,11 @@ public class UserServiceImpl implements UserService {
         return user.map(userMapper::toInfo);
     }
 
+    /**
+     * Retrieves all users.
+     *
+     * @return a list of all UserInfo objects
+     */
     @Override
     public List<UserInfo> getAll() {
         List<User> users = userRepository.findAll();
@@ -113,6 +149,13 @@ public class UserServiceImpl implements UserService {
         return resultUserList;
     }
 
+    /**
+     * Retrieves a paginated list of users.
+     *
+     * @param offset the starting index of the page
+     * @param limit  the number of users per page
+     * @return a PagedResponse containing the paginated UserInfo objects
+     */
     @Override
     public PagedResponse<UserInfo> getAllPaged(int offset, int limit) {
         PageRequest pageRequest = PageRequest.of(offset / limit, limit);
@@ -130,18 +173,31 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    /**
+     * Deletes a user by ID.
+     * Removes the user from the database and the cache.
+     *
+     * @param id the ID of the user to delete
+     */
     @Override
     public void delete(Long id) {
         userRepository.deleteById(id);
         userCacheService.deleteUser(id);
     }
 
+    /**
+     * Resolves roles from a set of RoleType enums.
+     * Fetches Role entities from the database based on the provided RoleType names.
+     *
+     * @param roleNames the set of RoleType enums
+     * @return a set of resolved Role entities
+     */
     private Set<Role> resolveRoles(Set<RoleType> roleNames) {
         if (roleNames == null || roleNames.isEmpty()) return new HashSet<>();
         return roleNames.stream()
             .map(roleName -> {
-                RoleType roleType = RoleType.valueOf(roleName.name().toUpperCase()); // Convert to enum
-                return roleRepository.findByName(roleType.name()) // Fetch Role entity by name
+                RoleType roleType = RoleType.valueOf(roleName.name().toUpperCase());
+                return roleRepository.findByName(roleType.name())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid role: " + roleName));
             })
             .collect(Collectors.toSet());

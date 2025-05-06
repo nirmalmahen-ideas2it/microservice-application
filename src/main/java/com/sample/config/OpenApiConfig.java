@@ -8,6 +8,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration for OpenAPI documentation.
+ * <p>
+ * This class sets up the OpenAPI specification for the application,
+ * including security schemes and API metadata.
+ * </p>
+ *
+ * @author Alagu Nirmal Mahendran
+ * @created 2025-06-05
+ */
 @Configuration
 public class OpenApiConfig {
 
@@ -19,6 +29,15 @@ public class OpenApiConfig {
     @Value("${oauth.tokenUri}")
     private String tokenUrl;
 
+    /**
+     * Configures the custom OpenAPI specification.
+     * <p>
+     * This method sets up the API title, version, and security requirements
+     * using OAuth2 authorization code flow.
+     * </p>
+     *
+     * @return the OpenAPI bean
+     */
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
