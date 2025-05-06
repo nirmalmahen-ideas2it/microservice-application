@@ -24,13 +24,13 @@ import java.util.Optional;
 @SpringBootApplication
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableCaching
-public class SampleApp {
+public class UserRoleApp {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SampleApp.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserRoleApp.class);
 
     private final Environment env;
 
-    public SampleApp(Environment env) {
+    public UserRoleApp(Environment env) {
         this.env = env;
     }
 
@@ -40,7 +40,7 @@ public class SampleApp {
      * @param args the command line arguments.
      */
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(SampleApp.class);
+        SpringApplication app = new SpringApplication(UserRoleApp.class);
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();
         logApplicationStartup(env);

@@ -1,4 +1,4 @@
-package com.sample.web.rest;
+package com.sample.web.rest.controller;
 
 import com.sample.domain.PagedResponse;
 import com.sample.dto.UserCreateDto;
@@ -22,6 +22,9 @@ import java.util.List;
  * Provides CRUD + PATCH + pagination endpoints.
  * <p>
  * OpenAPI documentation is provided using Swagger annotations.
+ *
+ * @author Alagu Nirmal Mahendran
+ * @since 05-06-2025
  */
 @RestController
 @RequestMapping("/api/users")
