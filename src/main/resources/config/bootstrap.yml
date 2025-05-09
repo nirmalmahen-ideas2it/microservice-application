@@ -48,3 +48,4 @@ spring:
           - context-path=${server.servlet.context-path:}
       host: localhost
       port: 8500
+
