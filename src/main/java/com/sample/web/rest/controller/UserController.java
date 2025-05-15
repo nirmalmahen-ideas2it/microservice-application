@@ -5,7 +5,6 @@ import com.sample.dto.UserCreateDto;
 import com.sample.dto.UserInfo;
 import com.sample.dto.UserUpdateDto;
 import com.sample.service.UserService;
-import com.sample.service.caching.UserCacheService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,19 +30,17 @@ import java.util.List;
 public class UserController {
 
     private final UserService service;
-    private final UserCacheService userCacheService;
 
-    public UserController(UserService service, UserCacheService userCacheService) {
+    public UserController(UserService service) {
         this.service = service;
-        this.userCacheService = userCacheService;
     }
 
     @Operation(summary = "Create a new user", description = "Adds a new user entity to the system")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User created successfully",
-            content = @Content(schema = @Schema(implementation = UserInfo.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid user input"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "User created successfully",
+                    content = @Content(schema = @Schema(implementation = UserInfo.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid user input"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
     public ResponseEntity<UserInfo> create(@Valid @RequestBody UserCreateDto dto) {
@@ -53,11 +50,11 @@ public class UserController {
 
     @Operation(summary = "Update an existing user", description = "Updates the details of an existing user")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User updated successfully",
-            content = @Content(schema = @Schema(implementation = UserInfo.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid user input"),
-        @ApiResponse(responseCode = "404", description = "User not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "User updated successfully",
+                    content = @Content(schema = @Schema(implementation = UserInfo.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid user input"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PutMapping
     public ResponseEntity<UserInfo> update(@Valid @RequestBody UserUpdateDto dto) {
@@ -66,11 +63,11 @@ public class UserController {
 
     @Operation(summary = "Partially update an existing user", description = "Updates specific fields of an existing user")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User updated successfully",
-            content = @Content(schema = @Schema(implementation = UserInfo.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid user input"),
-        @ApiResponse(responseCode = "404", description = "User not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "User updated successfully",
+                    content = @Content(schema = @Schema(implementation = UserInfo.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid user input"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PatchMapping
     public ResponseEntity<UserInfo> patch(@RequestBody UserUpdateDto dto) {
@@ -79,10 +76,10 @@ public class UserController {
 
     @Operation(summary = "Get user by ID", description = "Fetches the details of a user by its ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User retrieved successfully",
-            content = @Content(schema = @Schema(implementation = UserInfo.class))),
-        @ApiResponse(responseCode = "404", description = "User not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "User retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = UserInfo.class))),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/{id}")
     public ResponseEntity<UserInfo> getById(@PathVariable Long id) {
@@ -91,9 +88,9 @@ public class UserController {
 
     @Operation(summary = "List all users", description = "Retrieves a list of all users in the system")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Users retrieved successfully",
-            content = @Content(schema = @Schema(implementation = UserInfo.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Users retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = UserInfo.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/all")
     public ResponseEntity<List<UserInfo>> getAll() {
@@ -102,23 +99,23 @@ public class UserController {
 
     @Operation(summary = "List paged users", description = "Returns users with pagination support")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Paged users retrieved successfully",
-            content = @Content(schema = @Schema(implementation = PagedResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error",
-            content = @Content(schema = @Schema(implementation = Void.class)))
+            @ApiResponse(responseCode = "200", description = "Paged users retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = PagedResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = Void.class)))
     })
     @GetMapping("/paged")
     public ResponseEntity<PagedResponse<UserInfo>> getAllPaged(
-        @RequestParam(defaultValue = "0") int offset,
-        @RequestParam(defaultValue = "10") int limit) {
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(service.getAllPaged(offset, limit));
     }
 
     @Operation(summary = "Delete user by ID", description = "Deletes a user by its ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "User deleted successfully"),
-        @ApiResponse(responseCode = "404", description = "User not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "204", description = "User deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

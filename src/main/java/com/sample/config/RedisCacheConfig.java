@@ -29,13 +29,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisCacheConfig {
 
     @Value("${spring.cache.redis.host}")
-    private String redisHost;
+    String redisHost;
 
     @Value("${spring.cache.redis.port}")
-    private int redisPort;
+    int redisPort;
 
     @Value("${spring.cache.redis.password}")
-    private String redisPassword;
+    String redisPassword;
 
     /**
      * Configures the Redis connection factory.

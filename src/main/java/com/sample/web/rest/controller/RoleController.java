@@ -35,10 +35,10 @@ public class RoleController {
 
     @Operation(summary = "Create a new role", description = "Adds a new role entity to the system")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Role created successfully",
-            content = @Content(schema = @Schema(implementation = RoleInfo.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid role input"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Role created successfully",
+                    content = @Content(schema = @Schema(implementation = RoleInfo.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid role input"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping
     public ResponseEntity<RoleInfo> create(@Valid @RequestBody RoleCreateDto dto) {
@@ -47,11 +47,11 @@ public class RoleController {
 
     @Operation(summary = "Update an existing role", description = "Updates the details of an existing role")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Role updated successfully",
-            content = @Content(schema = @Schema(implementation = RoleInfo.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid role input"),
-        @ApiResponse(responseCode = "404", description = "Role not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Role updated successfully",
+                    content = @Content(schema = @Schema(implementation = RoleInfo.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid role input"),
+            @ApiResponse(responseCode = "404", description = "Role not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PutMapping
     public ResponseEntity<RoleInfo> update(@Valid @RequestBody RoleUpdateDto dto) {
@@ -60,11 +60,11 @@ public class RoleController {
 
     @Operation(summary = "Partially update an existing role", description = "Updates specific fields of an existing role")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Role updated successfully",
-            content = @Content(schema = @Schema(implementation = RoleInfo.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid role input"),
-        @ApiResponse(responseCode = "404", description = "Role not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Role updated successfully",
+                    content = @Content(schema = @Schema(implementation = RoleInfo.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid role input"),
+            @ApiResponse(responseCode = "404", description = "Role not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PatchMapping
     public ResponseEntity<RoleInfo> patch(@RequestBody RoleUpdateDto dto) {
@@ -73,9 +73,9 @@ public class RoleController {
 
     @Operation(summary = "List all roles", description = "Retrieves a list of all roles in the system")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Roles retrieved successfully",
-            content = @Content(schema = @Schema(implementation = RoleInfo.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Roles retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = RoleInfo.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/all")
     public ResponseEntity<List<RoleInfo>> getAll() {
@@ -84,10 +84,10 @@ public class RoleController {
 
     @Operation(summary = "Get role by ID", description = "Fetches the details of a role by its ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Role retrieved successfully",
-            content = @Content(schema = @Schema(implementation = RoleInfo.class))),
-        @ApiResponse(responseCode = "404", description = "Role not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Role retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = RoleInfo.class))),
+            @ApiResponse(responseCode = "404", description = "Role not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/{id}")
     public ResponseEntity<RoleInfo> getById(@PathVariable Long id) {
@@ -96,22 +96,22 @@ public class RoleController {
 
     @Operation(summary = "List paged roles", description = "Returns roles with pagination support")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Paged roles retrieved successfully",
-            content = @Content(schema = @Schema(implementation = PagedResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Paged roles retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = PagedResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/paged")
     public ResponseEntity<PagedResponse<RoleInfo>> getAllPaged(
-        @RequestParam(defaultValue = "0") int offset,
-        @RequestParam(defaultValue = "10") int limit) {
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(service.getAllPaged(offset, limit));
     }
 
     @Operation(summary = "Delete role by ID", description = "Deletes a role by its ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Role deleted successfully"),
-        @ApiResponse(responseCode = "404", description = "Role not found"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "204", description = "Role deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Role not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

@@ -143,10 +143,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserInfo> getAll() {
         List<User> users = userRepository.findAll();
-        List<UserInfo> resultUserList = users.stream()
-            .map(userMapper::toInfo)
-            .toList();
-        return resultUserList;
+        return users.stream()
+                .map(userMapper::toInfo)
+                .toList();
     }
 
     /**
@@ -162,14 +161,14 @@ public class UserServiceImpl implements UserService {
         Page<User> page = userRepository.findAll(pageRequest);
 
         List<UserInfo> userInfos = page.getContent().stream()
-            .map(userMapper::toInfo)
-            .toList();
+                .map(userMapper::toInfo)
+                .toList();
 
         return new PagedResponse<>(
-            userInfos,
-            page.getTotalElements(),
-            page.getNumber(),
-            page.getSize()
+                userInfos,
+                page.getTotalElements(),
+                page.getNumber(),
+                page.getSize()
         );
     }
 
@@ -195,11 +194,11 @@ public class UserServiceImpl implements UserService {
     private Set<Role> resolveRoles(Set<RoleType> roleNames) {
         if (roleNames == null || roleNames.isEmpty()) return new HashSet<>();
         return roleNames.stream()
-            .map(roleName -> {
-                RoleType roleType = RoleType.valueOf(roleName.name().toUpperCase());
-                return roleRepository.findByName(roleType.name())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid role: " + roleName));
-            })
-            .collect(Collectors.toSet());
+                .map(roleName -> {
+                    RoleType roleType = RoleType.valueOf(roleName.name().toUpperCase());
+                    return roleRepository.findByName(roleType.name())
+                            .orElseThrow(() -> new IllegalArgumentException("Invalid role: " + roleName));
+                })
+                .collect(Collectors.toSet());
     }
 }

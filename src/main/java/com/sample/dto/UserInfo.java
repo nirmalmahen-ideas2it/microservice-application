@@ -8,6 +8,14 @@ import lombok.Getter;
 import java.time.Instant;
 import java.util.Set;
 
+/**
+ * Data Transfer Object for User Information.
+ * Represents user data for fetching user details, including roles and audit information.
+ * Used for transferring user information between server and client.
+ *
+ * @author Alagu Nirmal Mahendran
+ * @created 2025-04-21
+ */
 @Getter
 @Builder(toBuilder = true)
 @JsonDeserialize(builder = UserInfo.UserInfoBuilder.class)

@@ -32,29 +32,29 @@ public class LiquibaseConfiguration {
 
     @Bean
     public SpringLiquibase liquibase(
-        @Qualifier("taskExecutor") Executor executor,
-        LiquibaseProperties liquibaseProperties,
-        @LiquibaseDataSource ObjectProvider<DataSource> liquibaseDataSource,
-        ObjectProvider<DataSource> dataSource,
-        ApplicationProperties applicationProperties,
-        DataSourceProperties dataSourceProperties
+            @Qualifier("taskExecutor") Executor executor,
+            LiquibaseProperties liquibaseProperties,
+            @LiquibaseDataSource ObjectProvider<DataSource> liquibaseDataSource,
+            ObjectProvider<DataSource> dataSource,
+            ApplicationProperties applicationProperties,
+            DataSourceProperties dataSourceProperties
     ) {
         SpringLiquibase liquibase;
         if (Boolean.TRUE.equals(applicationProperties.getLiquibase().getAsyncStart())) {
             liquibase = SpringLiquibaseUtil.createAsyncSpringLiquibase(
-                this.env,
-                executor,
-                liquibaseDataSource.getIfAvailable(),
-                liquibaseProperties,
-                dataSource.getIfUnique(),
-                dataSourceProperties
+                    this.env,
+                    executor,
+                    liquibaseDataSource.getIfAvailable(),
+                    liquibaseProperties,
+                    dataSource.getIfUnique(),
+                    dataSourceProperties
             );
         } else {
             liquibase = SpringLiquibaseUtil.createSpringLiquibase(
-                liquibaseDataSource.getIfAvailable(),
-                liquibaseProperties,
-                dataSource.getIfUnique(),
-                dataSourceProperties
+                    liquibaseDataSource.getIfAvailable(),
+                    liquibaseProperties,
+                    dataSource.getIfUnique(),
+                    dataSourceProperties
             );
         }
         liquibase.setChangeLog("classpath:config/liquibase/master.xml");

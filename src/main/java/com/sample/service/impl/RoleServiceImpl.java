@@ -103,10 +103,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<RoleInfo> getAll() {
         List<Role> roles = roleRepository.findAll();
-        List<RoleInfo> resultRolesList = roles.stream()
-            .map(roleMapper::toInfo)
-            .toList();
-        return resultRolesList;
+        return roles.stream()
+                .map(roleMapper::toInfo)
+                .toList();
     }
 
     /**
@@ -121,14 +120,14 @@ public class RoleServiceImpl implements RoleService {
         Page<Role> page = roleRepository.findAll(pageRequest);
 
         List<RoleInfo> roleInfos = page.getContent().stream()
-            .map(roleMapper::toInfo)
-            .toList();
+                .map(roleMapper::toInfo)
+                .toList();
 
         return new PagedResponse<>(
-            roleInfos,
-            page.getTotalElements(),
-            page.getNumber(),
-            page.getSize()
+                roleInfos,
+                page.getTotalElements(),
+                page.getNumber(),
+                page.getSize()
         );
     }
 

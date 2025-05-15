@@ -32,7 +32,7 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_HTTP_ENABLED=true
       - KC_HOSTNAME_STRICT=false
-    command: ["start-dev"]
+    command: [ "start-dev" ]
 ```
 
 Start it:

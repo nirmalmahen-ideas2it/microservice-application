@@ -9,8 +9,15 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Entity representing a Role in the system.
+ * Includes attributes for role name and associated users.
+ * Extends auditing functionality for tracking creation and modification details.
+ *
+ * @author Alagu Nirmal Mahendran
+ * @created 2025-04-21
+ */
 @EqualsAndHashCode(callSuper = true, exclude = {"users"})
-
 @Entity
 @Table(name = "roles")
 @Data

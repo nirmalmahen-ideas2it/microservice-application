@@ -50,6 +50,9 @@ public class UserCacheServiceImpl implements UserCacheService {
      */
     @Override
     public UserInfo getUser(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
         return (UserInfo) redisTemplate.opsForValue().get(USER_KEY_PREFIX + id);
     }
 
@@ -60,6 +63,9 @@ public class UserCacheServiceImpl implements UserCacheService {
      */
     @Override
     public void deleteUser(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
+        }
         redisTemplate.delete(USER_KEY_PREFIX + id);
     }
 }

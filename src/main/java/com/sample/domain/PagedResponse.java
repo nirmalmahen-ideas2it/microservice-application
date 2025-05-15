@@ -6,6 +6,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Data Transfer Object for Paged Response.
+ * Represents paginated response data for API results.
+ *
+ * @author Alagu Nirmal Mahendran
+ * @created 2025-04-21
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

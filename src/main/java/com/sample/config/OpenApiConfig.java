@@ -41,21 +41,21 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-            .info(new Info().title("User and Role Module").version("v1"))
-            .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
-            .components(new Components().addSecuritySchemes(SECURITY_SCHEME_NAME,
-                new SecurityScheme()
-                    .type(SecurityScheme.Type.OAUTH2)
-                    .scheme("bearer")
-                    .bearerFormat("JWT")
-                    .flows(new OAuthFlows()
-                        .authorizationCode(new OAuthFlow()
-                            .authorizationUrl(authorizationUrl)
-                            .tokenUrl(tokenUrl)
-                            .scopes(new Scopes().addString("openid", "OpenID Connect scope"))
-                        )
-                    )
-            ));
+                .info(new Info().title("User and Role Module").version("v1"))
+                .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
+                .components(new Components().addSecuritySchemes(SECURITY_SCHEME_NAME,
+                        new SecurityScheme()
+                                .type(SecurityScheme.Type.OAUTH2)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                                .flows(new OAuthFlows()
+                                        .authorizationCode(new OAuthFlow()
+                                                .authorizationUrl(authorizationUrl)
+                                                .tokenUrl(tokenUrl)
+                                                .scopes(new Scopes().addString("openid", "OpenID Connect scope"))
+                                        )
+                                )
+                ));
     }
 
 }

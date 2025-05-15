@@ -8,6 +8,7 @@ import com.sample.dto.UserUpdateDto;
 import com.sample.enums.RoleType;
 import org.mapstruct.*;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -70,11 +71,11 @@ public interface UserMapper {
      */
     default Set<String> mapRoles(Set<Role> roles) {
         if (roles == null) {
-            return null;
+            return Collections.emptySet();
         }
         return roles.stream()
-            .map(Role::getName) // Assuming Role has a getName() method
-            .collect(Collectors.toSet());
+                .map(Role::getName) // Assuming Role has a getName() method
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -90,11 +91,11 @@ public interface UserMapper {
             return new HashSet<>();
         }
         return roleTypes.stream()
-            .map(roleType -> {
-                Role role = new Role();
-                role.setName(roleType.name());
-                return role;
-            })
-            .collect(Collectors.toSet());
+                .map(roleType -> {
+                    Role role = new Role();
+                    role.setName(roleType.name());
+                    return role;
+                })
+                .collect(Collectors.toSet());
     }
 }
