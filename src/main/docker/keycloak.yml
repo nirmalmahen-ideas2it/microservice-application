@@ -1,4 +1,4 @@
-name: sample
+name: user-application
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.2

@@ -1,4 +1,4 @@
-name: sample
+name: user-application
 services:
   mongodb:
     image: mongo:6.0

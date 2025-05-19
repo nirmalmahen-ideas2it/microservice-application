@@ -89,7 +89,7 @@ docker compose up -d
 ```yaml
 spring:
   application:
-    name: sample
+    name: user-application
 
   security:
     oauth2:
