@@ -1,6 +1,6 @@
 package com.ideas2it.training.user.service;
 
-import com.ideas2it.training.user.domain.PagedResponse;
+import com.ideas2it.training.user.dto.PagedResponse;
 import com.ideas2it.training.user.dto.RoleCreateDto;
 import com.ideas2it.training.user.dto.RoleInfo;
 import com.ideas2it.training.user.dto.RoleUpdateDto;

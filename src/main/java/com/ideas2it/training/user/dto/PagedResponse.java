@@ -1,4 +1,4 @@
-package com.ideas2it.training.user.domain;
+package com.ideas2it.training.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

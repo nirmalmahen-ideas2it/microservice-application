@@ -2,7 +2,7 @@ package com.ideas2it.training.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ideas2it.training.user.config.SecurityConfig;
-import com.ideas2it.training.user.domain.PagedResponse;
+import com.ideas2it.training.user.dto.PagedResponse;
 import com.ideas2it.training.user.dto.UserCreateDto;
 import com.ideas2it.training.user.dto.UserInfo;
 import com.ideas2it.training.user.dto.UserUpdateDto;
