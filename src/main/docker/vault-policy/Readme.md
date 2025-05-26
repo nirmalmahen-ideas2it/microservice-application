@@ -19,21 +19,21 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 ## Step 2: Create AppRole Role
 
 1. Create a role with the required parameters such as `secret_id_ttl`, `token_ttl`, `token_max_ttl`, and `policies`. In
-   this case, we're attaching the `sample-dev-policy` to the role:
+   this case, we're attaching the `user-application-dev-policy` to the role:
 
     ```bash
-    vault write auth/approle/role/sample-dev-role \
+    vault write auth/approle/role/user-application-dev-role \
          secret_id_ttl=24h \
          token_num_uses=100 \
          token_ttl=20h \
          token_max_ttl=24h \
-         policies=default,sample-dev-policy
+         policies=default,user-application-dev-policy
     ```
 
    **Output:**
 
     ```
-    Success! Data written to: auth/approle/role/sample-dev-role
+    Success! Data written to: auth/approle/role/user-application-dev-role
     ```
 
 ## Step 3: Retrieve Role ID
@@ -41,7 +41,7 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 1. Fetch the `role_id` for the newly created role:
 
     ```bash
-    vault read auth/approle/role/sample-dev-role/role-id
+    vault read auth/approle/role/user-application-dev-role/role-id
     ```
 
    **Output (with sensitive values hidden):**
@@ -57,7 +57,7 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 1. Generate the `secret_id` for the role:
 
     ```bash
-    vault write -f auth/approle/role/sample-dev-role/secret-id
+    vault write -f auth/approle/role/user-application-dev-role/secret-id
     ```
 
    **Output (with sensitive values hidden):**
@@ -73,23 +73,24 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 
 ## Step 5: Create/Update Policies
 
-1. Create the policy file `sample-policy.hcl` with the required capabilities. Below is an example policy for reading and
-   managing the secrets in `secret/sample/dev`:
+1. Create the policy file `user-application-policy.hcl` with the required capabilities. Below is an example policy for
+   reading and
+   managing the secrets in `secret/user-application/dev`:
 
     ```hcl
-    path "secret/sample/dev" {
+    path "secret/user-application/dev" {
       capabilities = ["create", "read", "update", "delete", "list"]
     }
 
-    path "secret/data/sample/dev" {
+    path "secret/data/user-application/dev" {
       capabilities = ["read"]
     }
 
-    path "secret/data/sample" {
+    path "secret/data/user-application" {
       capabilities = ["read"]
     }
 
-    path "secret/metadata/sample/dev" {
+    path "secret/metadata/user-application/dev" {
       capabilities = ["read", "list"]
     }
     ```
@@ -97,19 +98,19 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 2. Write the policy to Vault:
 
     ```bash
-    vault policy write sample-dev-policy /path/to/sample-policy.hcl
+    vault policy write user-application-dev-policy /path/to/user-application-dev-policy.hcl
     ```
 
-   **Note:** If you're running Vault in a container, copy the `sample-policy.hcl` file to the container first:
+   **Note:** If you're running Vault in a container, copy the `user-application-policy.hcl` file to the container first:
 
     ```bash
-    docker cp ./sample-policy.hcl <container_id>:/sample-policy.hcl
+    docker cp ./user-application-dev-policy.hcl <container_id>:/user-application-dev-policy.hcl
     ```
 
    Then, execute the following inside the container:
 
     ```bash
-    vault policy write sample-dev-policy /sample-policy.hcl
+    vault policy write user-application-dev-policy /user-application-dev-policy.hcl
     ```
 
 ## Step 6: Verify the Policy
@@ -117,26 +118,26 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 1. Verify that the policy has been written correctly:
 
     ```bash
-    vault policy read sample-dev-policy
+    vault policy read user-application-dev-policy
     ```
 
    **Output (with sensitive values hidden):**
 
     ```
-    # sample-policy.hcl
-    path "secret/sample/dev" {
+    # user-application-policy.hcl
+    path "secret/user-application/dev" {
       capabilities = ["create", "read", "update", "delete", "list"]
     }
 
-    path "secret/data/sample/dev" {
+    path "secret/data/user-application/dev" {
       capabilities = ["read"]
     }
 
-    path "secret/data/sample" {
+    path "secret/data/user-application" {
       capabilities = ["read"]
     }
 
-    path "secret/metadata/sample/dev" {
+    path "secret/metadata/user-application/dev" {
       capabilities = ["read", "list"]
     }
     ```
@@ -146,13 +147,13 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 1. After updating the policy, you need to attach it again to the role:
 
     ```bash
-    vault write auth/approle/role/sample-dev-role token_policies="sample-dev-policy"
+    vault write auth/approle/role/user-application-dev-role token_policies="user-application-dev-policy"
     ```
 
    **Output:**
 
     ```
-    Success! Data written to: auth/approle/role/sample-dev-role
+    Success! Data written to: auth/approle/role/user-application-dev-role
     ```
 
 ## Step 8: Generate Secret ID and Use it
@@ -160,7 +161,7 @@ This guide outlines the steps for enabling AppRole-based authentication and conf
 1. To generate a new `secret_id`, run the following command:
 
     ```bash
-    vault write -f auth/approle/role/sample-dev-role/secret-id
+    vault write -f auth/approle/role/user-application-dev-role/secret-id
     ```
 
    **Output (with sensitive values hidden):**

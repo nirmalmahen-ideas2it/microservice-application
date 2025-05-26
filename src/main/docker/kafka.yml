@@ -1,4 +1,4 @@
-name: sample
+name: user-application
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0

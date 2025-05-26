@@ -32,7 +32,7 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_HTTP_ENABLED=true
       - KC_HOSTNAME_STRICT=false
-    command: ["start-dev"]
+    command: [ "start-dev" ]
 ```
 
 Start it:
@@ -89,7 +89,7 @@ docker compose up -d
 ```yaml
 spring:
   application:
-    name: sample
+    name: user-application
 
   security:
     oauth2:
