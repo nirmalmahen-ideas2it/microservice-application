@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
 import java.util.Set;
@@ -18,6 +19,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @ImportAutoConfiguration(exclude = {LiquibaseAutoConfiguration.class})
+@TestPropertySource(properties = {
+        "spring.cloud.config.enabled=false",
+        "spring.cloud.vault.enabled=false",
+        "spring.cloud.consul.enabled=false"
+})
 class UserRepositoryTest {
 
     @Autowired
@@ -33,6 +39,7 @@ class UserRepositoryTest {
         User user = new User();
         user.setUsername("testuser_1");
         user.setPassword("password");
+        user.setCreatedBy("SYSTEM");
         userRepository.save(user);
 
         // Act
@@ -58,6 +65,7 @@ class UserRepositoryTest {
         User user = new User();
         user.setUsername("testuser");
         user.setPassword("password");
+        user.setCreatedBy("SYSTEM");
         User savedUser = userRepository.save(user);
 
         // Act
@@ -82,11 +90,13 @@ class UserRepositoryTest {
         // Arrange
         Role role = new Role();
         role.setName(RoleType.USER.name());
+        role.setCreatedBy("SYSTEM");
         roleRepository.save(role);
 
         User user = new User();
         user.setUsername("testuser");
         user.setPassword("password");
+        user.setCreatedBy("SYSTEM");
         user.setRoles(Set.of(role));
 
         // Act
@@ -104,6 +114,7 @@ class UserRepositoryTest {
         User user = new User();
         user.setUsername("testuser");
         user.setPassword("password");
+        user.setCreatedBy("SYSTEM");
         User savedUser = userRepository.save(user);
 
         // Act

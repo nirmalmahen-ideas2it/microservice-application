@@ -1,4 +1,4 @@
-name: user-application
+name: health-application
 services:
   mongodb:
     image: mongo:6.0
@@ -10,6 +10,12 @@ services:
       MONGO_INITDB_DATABASE: vitals
     volumes:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   mongo-express:
     image: mongo-express

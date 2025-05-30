@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -27,6 +29,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = AuthValidationController.class, excludeAutoConfiguration = {OAuth2ResourceServerAutoConfiguration.class})
 @Import({SecurityConfig.class})
 @WithMockUser(roles = "USER")
+@ActiveProfiles("test")
+@TestPropertySource(properties = {
+        "spring.cloud.config.enabled=false",
+        "spring.cloud.vault.enabled=false",
+        "spring.cloud.consul.enabled=false"
+})
 class AuthValidationControllerTest {
 
     @Autowired

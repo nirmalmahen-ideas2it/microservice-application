@@ -1,0 +1,10 @@
+name: health-application
+services:
+  user-application:
+    image: user-application:latest
+    ports:
+      - "9090:9090"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      VAULT_ROLE_ID: 80b2b28f-489c-b894-a423-0fe2c8b6004c
+      VAULT_SECRET_ID: 8c334f8f-5368-d5bf-9503-4f139a56657b

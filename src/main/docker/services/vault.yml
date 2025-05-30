@@ -1,4 +1,4 @@
-name: user-application
+name: health-application
 services:
   vault:
     image: hashicorp/vault:1.19
@@ -12,7 +12,7 @@ services:
         {
           "storage": {
             "consul": {
-              "address": "user-application-consul-1:8500",
+              "address": "health-application-consul-1:8500",
               "path": "vault/"
             }
           },
@@ -28,6 +28,12 @@ services:
         }
     cap_add:
       - IPC_LOCK
+    healthcheck:
+      test: [ "CMD", "vault", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     volumes:
       - vault_data:/vault/file
 

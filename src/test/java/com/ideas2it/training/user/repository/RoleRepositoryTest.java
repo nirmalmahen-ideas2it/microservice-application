@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Optional;
 
@@ -15,6 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @ImportAutoConfiguration(exclude = {LiquibaseAutoConfiguration.class})
+@TestPropertySource(properties = {
+        "spring.cloud.config.enabled=false",
+        "spring.cloud.vault.enabled=false",
+        "spring.cloud.consul.enabled=false"
+})
 class RoleRepositoryTest {
 
     @Autowired
@@ -25,6 +31,7 @@ class RoleRepositoryTest {
         // Arrange
         Role role = new Role();
         role.setName("ADMIN");
+        role.setCreatedBy("SYSTEM");
         roleRepository.save(role);
 
         // Act

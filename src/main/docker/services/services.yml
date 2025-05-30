@@ -1,0 +1,113 @@
+version: "3.8"
+name: health-application
+
+services:
+  # 1. Consul
+  consul:
+    extends:
+      file: consul.yml
+      service: consul
+
+  consul-config-loader:
+    extends:
+      file: consul.yml
+      service: consul-config-loader
+    depends_on:
+      consul:
+        condition: service_healthy
+
+  # 2. PostgreSQL
+  postgresql:
+    extends:
+      file: postgresql.yml
+      service: postgresql
+    depends_on:
+      consul:
+        condition: service_healthy
+
+  pgadmin:
+    extends:
+      file: postgresql.yml
+      service: pgadmin
+    depends_on:
+      postgresql:
+        condition: service_healthy
+
+  # 3. Vault
+  vault:
+    extends:
+      file: vault.yml
+      service: vault
+    depends_on:
+      postgresql:
+        condition: service_healthy
+
+  # 4. Redis
+  redis:
+    extends:
+      file: redis.yml
+      service: redis
+    depends_on:
+      vault:
+        condition: service_healthy
+
+  # 5. Elasticsearch
+  elasticsearch:
+    extends:
+      file: elasticsearch.yml
+      service: elasticsearch
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # 6. MongoDB
+  mongodb:
+    extends:
+      file: mongo/mongo.yml
+      service: mongodb
+    depends_on:
+      consul:
+        condition: service_healthy
+
+  mongo-express:
+    extends:
+      file: mongo/mongo.yml
+      service: mongo-express
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  # 7. Kafka
+  zookeeper:
+    extends:
+      file: kafka.yml
+      service: zookeeper
+
+  kafka:
+    extends:
+      file: kafka.yml
+      service: kafka
+
+
+  # 8. RabbitMQ
+  rabbitmq:
+    extends:
+      file: rabbitmq.yml
+      service: rabbitmq
+
+  # 9. Keycloak
+  keycloak:
+    extends:
+      file: keycloak.yml
+      service: keycloak
+    depends_on:
+      postgresql:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  mongodb_data:
+  vault_data:
+  redis_data:
+  esdata:

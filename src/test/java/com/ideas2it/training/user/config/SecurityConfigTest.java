@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,6 +28,10 @@ class SecurityConfigTest {
     @Test
     void testFilterChain() throws Exception {
         // Arrange
+        CorsConfigurer<HttpSecurity> corsConfigurer = mock(CorsConfigurer.class);
+        when(mockHttpSecurity.cors()).thenReturn(corsConfigurer);
+        when(corsConfigurer.and()).thenReturn(mockHttpSecurity);
+
         when(mockHttpSecurity.authorizeHttpRequests(any())).thenReturn(mockHttpSecurity);
         when(mockHttpSecurity.oauth2ResourceServer(any())).thenReturn(mockHttpSecurity);
         when(mockHttpSecurity.sessionManagement(any())).thenReturn(mockHttpSecurity);
@@ -36,12 +41,15 @@ class SecurityConfigTest {
         securityConfig.filterChain(mockHttpSecurity);
 
         // Assert
+        verify(mockHttpSecurity).cors();
+        verify(corsConfigurer).and();
         verify(mockHttpSecurity).authorizeHttpRequests(any());
         verify(mockHttpSecurity).oauth2ResourceServer(any());
         verify(mockHttpSecurity).sessionManagement(any());
         verify(mockHttpSecurity).csrf(any());
         verify(mockHttpSecurity).build();
     }
+
 
     @Test
     void testPasswordEncoder() {

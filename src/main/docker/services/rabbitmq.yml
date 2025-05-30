@@ -1,4 +1,4 @@
-name: user-application
+name: health-application
 services:
   rabbitmq:
     image: rabbitmq:3-management
