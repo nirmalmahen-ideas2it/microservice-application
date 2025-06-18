@@ -1,8 +1,8 @@
 package com.ideas2it.training.user.service.impl;
 
 import com.ideas2it.training.user.dto.UserInfo;
+import com.ideas2it.training.user.service.caching.CacheContext;
 import com.ideas2it.training.user.service.caching.CacheFactory;
-import com.ideas2it.training.user.service.caching.CacheStrategy;
 import com.ideas2it.training.user.service.caching.UserCacheService;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,8 @@ import java.time.Duration;
 
 /**
  * Service implementation for caching user data.
- * Uses the CacheStrategy pattern through the CacheFactory.
+ * Uses the Strategy pattern through CacheContext for flexible caching
+ * implementations.
  * <p>
  * This class provides methods to save, retrieve, and delete user data in a
  * Redis cache.
@@ -25,17 +26,17 @@ public class UserCacheServiceImpl implements UserCacheService {
     private static final String USER_KEY_PREFIX = "user:";
     private static final Duration CACHE_DURATION = Duration.ofMinutes(1);
 
+    private final CacheContext cacheContext;
     private final CacheFactory cacheFactory;
-    private final CacheStrategy cacheStrategy;
 
     /**
-     * Constructor to initialize the CacheFactory and CacheStrategy.
+     * Constructor to initialize the CacheContext and CacheFactory.
      *
      * @param cacheFactory the CacheFactory for creating CacheStrategy instances
      */
     public UserCacheServiceImpl(CacheFactory cacheFactory) {
         this.cacheFactory = cacheFactory;
-        this.cacheStrategy = cacheFactory.createCacheStrategy(CacheFactory.CacheType.REDIS);
+        this.cacheContext = new CacheContext(cacheFactory.createCacheStrategy(CacheFactory.CacheType.ENHANCED_REDIS));
     }
 
     /**
@@ -48,7 +49,7 @@ public class UserCacheServiceImpl implements UserCacheService {
         if (user == null || user.getId() == null) {
             throw new IllegalArgumentException("User or user ID cannot be null");
         }
-        cacheStrategy.save(USER_KEY_PREFIX + user.getId(), user, CACHE_DURATION);
+        cacheContext.save(USER_KEY_PREFIX + user.getId(), user, CACHE_DURATION);
     }
 
     /**
@@ -62,7 +63,7 @@ public class UserCacheServiceImpl implements UserCacheService {
         if (id == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
-        return (UserInfo) cacheStrategy.get(USER_KEY_PREFIX + id);
+        return (UserInfo) cacheContext.get(USER_KEY_PREFIX + id);
     }
 
     /**
@@ -75,6 +76,15 @@ public class UserCacheServiceImpl implements UserCacheService {
         if (id == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
-        cacheStrategy.delete(USER_KEY_PREFIX + id);
+        cacheContext.delete(USER_KEY_PREFIX + id);
+    }
+
+    /**
+     * Changes the caching strategy at runtime.
+     *
+     * @param cacheType the type of cache strategy to use
+     */
+    public void changeCacheStrategy(CacheFactory.CacheType cacheType) {
+        cacheContext.setCacheStrategy(cacheFactory.createCacheStrategy(cacheType));
     }
 }

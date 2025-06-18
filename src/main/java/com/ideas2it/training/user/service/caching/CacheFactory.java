@@ -10,10 +10,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class CacheFactory {
 
-    private final RedisCacheStrategy redisCacheStrategy;
+ 
+    private final InMemoryCacheStrategy inMemoryCacheStrategy;
+    private final EnhancedRedisCacheStrategy enhancedRedisCacheStrategy;
 
-    public CacheFactory(RedisCacheStrategy redisCacheStrategy) {
-        this.redisCacheStrategy = redisCacheStrategy;
+    public CacheFactory(
+          
+            InMemoryCacheStrategy inMemoryCacheStrategy,
+            EnhancedRedisCacheStrategy enhancedRedisCacheStrategy) {
+        
+        this.inMemoryCacheStrategy = inMemoryCacheStrategy;
+        this.enhancedRedisCacheStrategy = enhancedRedisCacheStrategy;
     }
 
     /**
@@ -25,9 +32,24 @@ public class CacheFactory {
      */
     public CacheStrategy createCacheStrategy(CacheType type) {
         return switch (type) {
-            case REDIS -> redisCacheStrategy;
-            // Add more cases for other cache types as needed
+           
+            case IN_MEMORY -> inMemoryCacheStrategy;
+            case ENHANCED_REDIS -> enhancedRedisCacheStrategy;
             default -> throw new IllegalArgumentException("Unsupported cache type: " + type);
+        };
+    }
+
+    /**
+     * Creates an enhanced cache strategy based on the specified type.
+     *
+     * @param type the type of enhanced cache strategy to create
+     * @return the created EnhancedCacheStrategy instance
+     * @throws IllegalArgumentException if the cache type is not supported
+     */
+    public EnhancedCacheStrategy createEnhancedCacheStrategy(CacheType type) {
+        return switch (type) {
+            case ENHANCED_REDIS -> enhancedRedisCacheStrategy;
+            default -> throw new IllegalArgumentException("Unsupported enhanced cache type: " + type);
         };
     }
 
@@ -35,7 +57,8 @@ public class CacheFactory {
      * Enum defining the supported cache types.
      */
     public enum CacheType {
-        REDIS
-        // Add more cache types as needed
+        
+        IN_MEMORY,
+        ENHANCED_REDIS
     }
 }
