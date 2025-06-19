@@ -4,6 +4,9 @@ import com.ideas2it.training.user.dto.PagedResponse;
 import com.ideas2it.training.user.dto.UserCreateDto;
 import com.ideas2it.training.user.dto.UserInfo;
 import com.ideas2it.training.user.dto.UserUpdateDto;
+import com.ideas2it.training.user.dto.PasswordResetRequestDto;
+import com.ideas2it.training.user.dto.PasswordResetTokenDto;
+import com.ideas2it.training.user.dto.PasswordResetResponseDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,5 +33,9 @@ public interface UserService {
     PagedResponse<UserInfo> getAllPaged(int offset, int limit);
 
     void delete(Long id);
+
+    PasswordResetResponseDto requestPasswordReset(PasswordResetRequestDto requestDto);
+
+    PasswordResetResponseDto resetPassword(PasswordResetTokenDto tokenDto);
 
 }

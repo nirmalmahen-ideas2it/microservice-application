@@ -5,6 +5,9 @@ import com.ideas2it.training.user.dto.PagedResponse;
 import com.ideas2it.training.user.dto.UserCreateDto;
 import com.ideas2it.training.user.dto.UserInfo;
 import com.ideas2it.training.user.dto.UserUpdateDto;
+import com.ideas2it.training.user.dto.PasswordResetRequestDto;
+import com.ideas2it.training.user.dto.PasswordResetTokenDto;
+import com.ideas2it.training.user.dto.PasswordResetResponseDto;
 import com.ideas2it.training.user.repository.RoleRepository;
 import com.ideas2it.training.user.repository.UserRepository;
 import com.ideas2it.training.user.service.caching.UserCacheService;
@@ -19,8 +22,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -201,5 +206,98 @@ class UserServiceImplTest {
         // Assert
         verify(userRepository, times(1)).deleteById(id);
         verify(userCacheService, times(1)).deleteUser(id);
+    }
+
+    @Test
+    void testRequestPasswordReset_ValidUsername() {
+        PasswordResetRequestDto requestDto = new PasswordResetRequestDto();
+        requestDto.setEmailOrUsername("testuser");
+        User user = new User();
+        user.setUsername("testuser");
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        PasswordResetResponseDto response = userService.requestPasswordReset(requestDto);
+        assertTrue(response.getMessage().contains("Password reset token generated"));
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void testRequestPasswordReset_ValidEmail() {
+        PasswordResetRequestDto requestDto = new PasswordResetRequestDto();
+        requestDto.setEmailOrUsername("test@email.com");
+        User user = new User();
+        user.setEmail("test@email.com");
+        when(userRepository.findByUsername("test@email.com")).thenReturn(Optional.empty());
+        when(userRepository.findAll()).thenReturn(List.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        PasswordResetResponseDto response = userService.requestPasswordReset(requestDto);
+        assertTrue(response.getMessage().contains("Password reset token generated"));
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void testRequestPasswordReset_UserNotFound() {
+        PasswordResetRequestDto requestDto = new PasswordResetRequestDto();
+        requestDto.setEmailOrUsername("unknown");
+        when(userRepository.findByUsername("unknown")).thenReturn(Optional.empty());
+        when(userRepository.findAll()).thenReturn(List.of());
+        PasswordResetResponseDto response = userService.requestPasswordReset(requestDto);
+        assertTrue(response.getMessage().contains("If the user exists"));
+    }
+
+    @Test
+    void testRequestPasswordReset_InvalidInput() {
+        PasswordResetRequestDto requestDto = new PasswordResetRequestDto();
+        requestDto.setEmailOrUsername("");
+        assertThrows(IllegalArgumentException.class, () -> userService.requestPasswordReset(requestDto));
+    }
+
+    @Test
+    void testResetPassword_ValidToken() {
+        PasswordResetTokenDto tokenDto = new PasswordResetTokenDto();
+        tokenDto.setToken("valid-token");
+        tokenDto.setNewPassword("newPassword123");
+        User user = new User();
+        user.setResetToken("valid-token");
+        user.setResetTokenExpiry(Instant.now().plusSeconds(60));
+        user.setId(1L);
+        when(userRepository.findByResetToken("valid-token")).thenReturn(Optional.of(user));
+        when(passwordEncoder.encode("newPassword123")).thenReturn("encoded");
+        when(userRepository.save(user)).thenReturn(user);
+        PasswordResetResponseDto response = userService.resetPassword(tokenDto);
+        assertTrue(response.getMessage().contains("Password reset successful"));
+        verify(userRepository, times(1)).save(user);
+        verify(userCacheService, times(1)).deleteUser(1L);
+    }
+
+    @Test
+    void testResetPassword_InvalidToken() {
+        PasswordResetTokenDto tokenDto = new PasswordResetTokenDto();
+        tokenDto.setToken("invalid-token");
+        tokenDto.setNewPassword("newPassword123");
+        when(userRepository.findByResetToken("invalid-token")).thenReturn(Optional.empty());
+        PasswordResetResponseDto response = userService.resetPassword(tokenDto);
+        assertTrue(response.getMessage().contains("Invalid or expired token"));
+    }
+
+    @Test
+    void testResetPassword_ExpiredToken() {
+        PasswordResetTokenDto tokenDto = new PasswordResetTokenDto();
+        tokenDto.setToken("expired-token");
+        tokenDto.setNewPassword("newPassword123");
+        User user = new User();
+        user.setResetToken("expired-token");
+        user.setResetTokenExpiry(Instant.now().minusSeconds(60));
+        when(userRepository.findByResetToken("expired-token")).thenReturn(Optional.of(user));
+        PasswordResetResponseDto response = userService.resetPassword(tokenDto);
+        assertTrue(response.getMessage().contains("Token expired"));
+    }
+
+    @Test
+    void testResetPassword_InvalidInput() {
+        PasswordResetTokenDto tokenDto = new PasswordResetTokenDto();
+        tokenDto.setToken("");
+        tokenDto.setNewPassword("");
+        assertThrows(IllegalArgumentException.class, () -> userService.resetPassword(tokenDto));
     }
 }
