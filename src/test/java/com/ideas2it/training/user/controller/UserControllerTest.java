@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -30,9 +31,11 @@ import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@WebMvcTest(controllers = UserController.class, excludeAutoConfiguration = {OAuth2ResourceServerAutoConfiguration.class})
-@Import({SecurityConfig.class, JwtDecoder.class})
+@WebMvcTest(controllers = UserController.class, excludeAutoConfiguration = {
+        OAuth2ResourceServerAutoConfiguration.class },properties = { "spring.cloud.config.enabled=false", "spring.cache.type=none" })
+@Import({ SecurityConfig.class, JwtDecoder.class })
 @WithMockUser(roles = "ADMIN")
 class UserControllerTest {
 
@@ -68,16 +71,16 @@ class UserControllerTest {
         when(userService.create(any(UserCreateDto.class))).thenReturn(userInfo);
 
         mockMvc.perform(post("/api/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
     }
 
     @Test
     void testCreate_InvalidInput() throws Exception {
         mockMvc.perform(post("/api/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -88,16 +91,16 @@ class UserControllerTest {
         when(userService.update(any(UserUpdateDto.class))).thenReturn(userInfo);
 
         mockMvc.perform(put("/api/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
     }
 
     @Test
     void testUpdate_InvalidInput() throws Exception {
         mockMvc.perform(put("/api/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -108,8 +111,8 @@ class UserControllerTest {
         when(userService.partialUpdate(any(UserUpdateDto.class))).thenReturn(userInfo);
 
         mockMvc.perform(patch("/api/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
     }
 
@@ -145,8 +148,8 @@ class UserControllerTest {
         when(userService.getAllPaged(0, 10)).thenReturn(pagedResponse);
 
         mockMvc.perform(get("/api/users/paged")
-                        .param("offset", "0")
-                        .param("limit", "10"))
+                .param("offset", "0")
+                .param("limit", "10"))
                 .andExpect(status().isOk());
     }
 
@@ -163,6 +166,64 @@ class UserControllerTest {
         doThrow(new RuntimeException("User not found")).when(userService).delete(999L);
 
         mockMvc.perform(delete("/api/users/999"))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void testViewProfile_Success() throws Exception {
+        UserInfo userInfo = UserInfo.builder().id(1L).username("testuser").email("test@email.com").build();
+        when(userService.getById(1L)).thenReturn(Optional.of(userInfo));
+
+        mockMvc.perform(get("/api/users/1"))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    assertTrue(json.contains("testuser"));
+                    assertTrue(json.contains("test@email.com"));
+                });
+    }
+
+    @Test
+    void testViewProfile_NotFound() throws Exception {
+        when(userService.getById(2L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/api/users/2"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testUpdateProfile_Success() throws Exception {
+        UserUpdateDto dto = UserUpdateDto.builder().id(1L).email("new@email.com").build();
+        UserInfo updatedInfo = UserInfo.builder().id(1L).email("new@email.com").build();
+        when(userService.update(any(UserUpdateDto.class))).thenReturn(updatedInfo);
+
+        mockMvc.perform(put("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    assertTrue(json.contains("new@email.com"));
+                });
+    }
+
+    @Test
+    void testUpdateProfile_ValidationError() throws Exception {
+        UserUpdateDto dto = UserUpdateDto.builder().id(null).email("").build();
+        mockMvc.perform(put("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testUpdateProfile_NotFound() throws Exception {
+        UserUpdateDto dto = UserUpdateDto.builder().id(999L).email("notfound@email.com").build();
+        when(userService.update(any(UserUpdateDto.class))).thenThrow(new RuntimeException("User not found"));
+
+        mockMvc.perform(put("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isInternalServerError());
     }
 }

@@ -1,5 +1,6 @@
 package com.ideas2it.training.user.service.caching;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Includes eviction policies and statistics tracking.
  */
 @Component
+@Primary
 public class EnhancedRedisCacheStrategy implements EnhancedCacheStrategy {
 
     private final RedisTemplate<String, Object> redisTemplate;

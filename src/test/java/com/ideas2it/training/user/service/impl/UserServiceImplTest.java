@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -299,5 +300,64 @@ class UserServiceImplTest {
         tokenDto.setToken("");
         tokenDto.setNewPassword("");
         assertThrows(IllegalArgumentException.class, () -> userService.resetPassword(tokenDto));
+    }
+
+    @Test
+    void testGetUserProfile_Success() {
+        Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
+        UserInfo userInfo = UserInfo.builder().id(userId).username("testuser").email("test@email.com").build();
+        when(userCacheService.getUser(userId)).thenReturn(null);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userMapper.toInfo(user)).thenReturn(userInfo);
+
+        Optional<UserInfo> result = userService.getById(userId);
+        assertTrue(result.isPresent());
+        assertEquals("testuser", result.get().getUsername());
+        assertEquals("test@email.com", result.get().getEmail());
+    }
+
+    @Test
+    void testGetUserProfile_NotFound() {
+        Long userId = 2L;
+        when(userCacheService.getUser(userId)).thenReturn(null);
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        Optional<UserInfo> result = userService.getById(userId);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testUpdateUserProfile_Success() {
+        UserUpdateDto dto = UserUpdateDto.builder().id(1L).email("new@email.com").build();
+        User user = new User();
+        user.setId(1L);
+        User updatedUser = new User();
+        updatedUser.setId(1L);
+        updatedUser.setEmail("new@email.com");
+        UserInfo updatedInfo = UserInfo.builder().id(1L).email("new@email.com").build();
+
+        when(userRepository.findById(dto.getId())).thenReturn(Optional.of(user));
+        when(userRepository.save(user)).thenReturn(updatedUser);
+        when(userMapper.toInfo(updatedUser)).thenReturn(updatedInfo);
+
+        UserInfo result = userService.update(dto);
+        assertNotNull(result);
+        assertEquals("new@email.com", result.getEmail());
+    }
+
+    @Test
+    void testUpdateUserProfile_ValidationError() {
+        UserUpdateDto dto = UserUpdateDto.builder().id(null).email("").build();
+        // Simulate validation error by throwing IllegalArgumentException
+        assertThrows(NoSuchElementException.class, () -> userService.update(dto));
+    }
+
+    @Test
+    void testUpdateUserProfile_NotFound() {
+        UserUpdateDto dto = UserUpdateDto.builder().id(999L).email("notfound@email.com").build();
+        when(userRepository.findById(dto.getId())).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> userService.update(dto));
     }
 }

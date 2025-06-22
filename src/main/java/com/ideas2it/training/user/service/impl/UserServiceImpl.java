@@ -149,7 +149,6 @@ public class UserServiceImpl implements UserService {
         UserInfo cached = userCacheService.getUser(id);
         if (cached != null)
             return Optional.of(cached);
-
         Optional<User> user = userRepository.findById(id);
         user.ifPresent(u -> userCacheService.saveUser(userMapper.toInfo(u)));
         return user.map(userMapper::toInfo);
