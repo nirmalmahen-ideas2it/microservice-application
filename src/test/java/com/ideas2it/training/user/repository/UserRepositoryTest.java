@@ -15,7 +15,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@DataJpaTest(properties = { "spring.cloud.config.enabled=false", "spring.cache.type=none" })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @ImportAutoConfiguration(exclude = {LiquibaseAutoConfiguration.class})
 class UserRepositoryTest {
@@ -33,6 +33,7 @@ class UserRepositoryTest {
         User user = new User();
         user.setUsername("testuser_1");
         user.setPassword("password");
+        user.setCreatedBy("testuser_1");
         userRepository.save(user);
 
         // Act
@@ -58,6 +59,7 @@ class UserRepositoryTest {
         User user = new User();
         user.setUsername("testuser");
         user.setPassword("password");
+        user.setCreatedBy("testuser");
         User savedUser = userRepository.save(user);
 
         // Act
@@ -82,11 +84,13 @@ class UserRepositoryTest {
         // Arrange
         Role role = new Role();
         role.setName(RoleType.USER.name());
+        role.setCreatedBy("testuser");
         roleRepository.save(role);
 
         User user = new User();
         user.setUsername("testuser");
         user.setPassword("password");
+        user.setCreatedBy("testuser");
         user.setRoles(Set.of(role));
 
         // Act
@@ -104,6 +108,7 @@ class UserRepositoryTest {
         User user = new User();
         user.setUsername("testuser");
         user.setPassword("password");
+        user.setCreatedBy("testuser");
         User savedUser = userRepository.save(user);
 
         // Act

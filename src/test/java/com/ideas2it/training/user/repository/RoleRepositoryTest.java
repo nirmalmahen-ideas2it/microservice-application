@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@DataJpaTest(properties = { "spring.cloud.config.enabled=false", "spring.cache.type=none" })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @ImportAutoConfiguration(exclude = {LiquibaseAutoConfiguration.class})
 class RoleRepositoryTest {
@@ -25,6 +25,7 @@ class RoleRepositoryTest {
         // Arrange
         Role role = new Role();
         role.setName("ADMIN");
+        role.setCreatedBy("testUser");
         roleRepository.save(role);
 
         // Act

@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = RoleController.class, excludeAutoConfiguration = {OAuth2ResourceServerAutoConfiguration.class})
+@WebMvcTest(properties = { "spring.cloud.config.enabled=false", "spring.cache.type=none" },controllers = RoleController.class, excludeAutoConfiguration = {OAuth2ResourceServerAutoConfiguration.class})
 @Import({SecurityConfig.class, JwtDecoder.class})
 @WithMockUser(roles = "ADMIN")
 class RoleControllerTest {

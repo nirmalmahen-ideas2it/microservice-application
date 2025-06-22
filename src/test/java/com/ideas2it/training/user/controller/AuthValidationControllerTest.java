@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = AuthValidationController.class, excludeAutoConfiguration = {OAuth2ResourceServerAutoConfiguration.class})
+@WebMvcTest(properties = { "spring.cloud.config.enabled=false", "spring.cache.type=none" },controllers = AuthValidationController.class, excludeAutoConfiguration = {OAuth2ResourceServerAutoConfiguration.class})
 @Import({SecurityConfig.class})
 @WithMockUser(roles = "USER")
 class AuthValidationControllerTest {

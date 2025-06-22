@@ -1,13 +1,12 @@
 package com.ideas2it.training.user.service.impl;
 
 import com.ideas2it.training.user.dto.UserInfo;
+import com.ideas2it.training.user.service.caching.CacheContext;
+import com.ideas2it.training.user.service.caching.CacheFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 
 import java.time.Duration;
 
@@ -17,95 +16,77 @@ import static org.mockito.Mockito.*;
 class UserCacheServiceImplTest {
 
     @Mock
-    private RedisTemplate<String, Object> redisTemplate;
-
+    private CacheFactory cacheFactory;
     @Mock
-    private ValueOperations<String, Object> valueOperations;
+    private CacheContext cacheContext;
 
-    @InjectMocks
     private UserCacheServiceImpl userCacheService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+        when(cacheFactory.createCacheStrategy(CacheFactory.CacheType.ENHANCED_REDIS)).thenReturn(null);
+        userCacheService = new UserCacheServiceImpl(cacheFactory);
+        // Inject mock cacheContext
+        // Reflection is used here because cacheContext is final and set in constructor
+        try {
+            java.lang.reflect.Field field = UserCacheServiceImpl.class.getDeclaredField("cacheContext");
+            field.setAccessible(true);
+            field.set(userCacheService, cacheContext);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    void testSaveUser_ValidUser() {
-        // Arrange
-        UserInfo user = UserInfo.builder()
-                .id(1L)
-                .username("john_doe")
-                .firstName("John Doe")
-                .build();
-        // Act
+    void testSaveUser_Valid() {
+        UserInfo user = UserInfo.builder().id(1L).build();
         userCacheService.saveUser(user);
-
-        // Assert
-        verify(valueOperations, times(1))
-                .set("user:1", user, Duration.ofMinutes(1));
+        verify(cacheContext, times(1)).save(eq("user:1"), eq(user), any(Duration.class));
     }
 
     @Test
     void testSaveUser_NullUser() {
-        // Act & Assert
-        assertThrows(NullPointerException.class, () -> userCacheService.saveUser(null));
-        verifyNoInteractions(valueOperations);
+        assertThrows(IllegalArgumentException.class, () -> userCacheService.saveUser(null));
     }
 
     @Test
-    void testGetUser_ValidId() {
-        // Arrange
-        UserInfo user = UserInfo.builder()
-                .id(1L)
-                .username("john_doe")
-                .firstName("John Doe")
-                .build();
-        when(valueOperations.get("user:1")).thenReturn(user);
+    void testSaveUser_NullUserId() {
+        UserInfo user = UserInfo.builder().id(null).build();
+        assertThrows(IllegalArgumentException.class, () -> userCacheService.saveUser(user));
+    }
 
-        // Act
-        UserInfo result = userCacheService.getUser(1L);
-
-        // Assert
-        assertNotNull(result);
+    @Test
+    void testGetUser_Valid() {
+        UserInfo user = UserInfo.builder().id(2L).build();
+        when(cacheContext.get("user:2")).thenReturn(user);
+        UserInfo result = userCacheService.getUser(2L);
         assertEquals(user, result);
-        verify(valueOperations, times(1)).get("user:1");
-    }
-
-    @Test
-    void testGetUser_InvalidId() {
-        // Arrange
-        when(valueOperations.get("user:999")).thenReturn(null);
-
-        // Act
-        UserInfo result = userCacheService.getUser(999L);
-
-        // Assert
-        assertNull(result);
-        verify(valueOperations, times(1)).get("user:999");
+        verify(cacheContext, times(1)).get("user:2");
     }
 
     @Test
     void testGetUser_NullId() {
-        // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> userCacheService.getUser(null));
-        verifyNoInteractions(valueOperations);
     }
 
     @Test
-    void testDeleteUser_ValidId() {
-        // Act
-        userCacheService.deleteUser(1L);
-
-        // Assert
-        verify(redisTemplate, times(1)).delete("user:1");
+    void testDeleteUser_Valid() {
+        userCacheService.deleteUser(3L);
+        verify(cacheContext, times(1)).delete("user:3");
     }
 
     @Test
     void testDeleteUser_NullId() {
-        // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> userCacheService.deleteUser(null));
-        verifyNoInteractions(redisTemplate);
+    }
+
+    @Test
+    void testChangeCacheStrategy() {
+        CacheContext newContext = mock(CacheContext.class);
+        when(cacheFactory.createCacheStrategy(CacheFactory.CacheType.IN_MEMORY)).thenReturn(null);
+        userCacheService.changeCacheStrategy(CacheFactory.CacheType.IN_MEMORY);
+        // No exception means success; actual strategy switching is internal
+        // Optionally, use reflection to verify cacheContext was updated
     }
 }

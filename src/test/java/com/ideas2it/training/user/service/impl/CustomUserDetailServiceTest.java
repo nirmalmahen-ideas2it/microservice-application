@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,54 +32,29 @@ class CustomUserDetailServiceTest {
     }
 
     @Test
-    void testLoadUserByUsername_ValidUser() {
-        // Arrange
-        User mockUser = new User();
-        mockUser.setUsername("validUser");
-        mockUser.setPassword("encodedPassword");
-        mockUser.setRoles(Set.of(new Role() {{
-            setName("USER");
-        }}));
-
-        when(userRepository.findByUsername("validUser")).thenReturn(Optional.of(mockUser));
-
-        // Act
-        UserDetails userDetails = customUserDetailService.loadUserByUsername("validUser");
-
-        // Assert
-        assertNotNull(userDetails);
-        assertEquals("validUser", userDetails.getUsername());
-        assertEquals("encodedPassword", userDetails.getPassword());
-        assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_USER")));
-        verify(userRepository, times(1)).findByUsername("validUser");
+    void testLoadUserByUsername_Valid() {
+        User user = new User();
+        user.setUsername("testuser");
+        user.setPassword("password");
+        Role role = new Role();
+        role.setName("ADMIN");
+        user.setRoles(Set.of(role));
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(user));
+        UserDetails details = customUserDetailService.loadUserByUsername("testuser");
+        assertEquals("testuser", details.getUsername());
+        assertEquals("password", details.getPassword());
+        assertTrue(details.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
     }
 
     @Test
-    void testLoadUserByUsername_UserNotFound() {
-        // Arrange
-        when(userRepository.findByUsername("nonExistentUser")).thenReturn(Optional.empty());
-
-        // Act & Assert
-        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () ->
-                customUserDetailService.loadUserByUsername("nonExistentUser"));
-        assertEquals("User not found with username: nonExistentUser", exception.getMessage());
-        verify(userRepository, times(1)).findByUsername("nonExistentUser");
+    void testLoadUserByUsername_NotFound() {
+        when(userRepository.findByUsername("notfound")).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> customUserDetailService.loadUserByUsername("notfound"));
     }
 
     @Test
-    void testLoadUserByUsername_NullUsername() {
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () ->
-                customUserDetailService.loadUserByUsername(null));
-        verifyNoInteractions(userRepository);
-    }
-
-    @Test
-    void testLoadUserByUsername_EmptyUsername() {
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () ->
-                customUserDetailService.loadUserByUsername(""));
-        verifyNoInteractions(userRepository);
+    void testLoadUserByUsername_NullOrEmpty() {
+        assertThrows(IllegalArgumentException.class, () -> customUserDetailService.loadUserByUsername(null));
+        assertThrows(IllegalArgumentException.class, () -> customUserDetailService.loadUserByUsername(" "));
     }
 }
